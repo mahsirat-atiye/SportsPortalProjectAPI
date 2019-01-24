@@ -17,8 +17,8 @@ def news_detail_view(request, news_id):
     for t in related_tags:
         for n in t.news.all():
             related_news.append(n)
-
-    related_news.remove(news)
+    if related_news.__contains__(news):
+        related_news.remove(news)
 
     return render(request, 'sport/news_detail.html', {
         'news': news,

@@ -32,7 +32,8 @@ class FootballTeam(Team):
 
 
 class FootballGame(Game):
-    teams = models.ManyToManyField(FootballTeam)
+    # teams = models.ManyToManyField(FootballTeam)
+    pass
 
 
 class FootballPlayer(Player):
@@ -53,3 +54,17 @@ class FootballNonPlayer(Human):
 
 class FootballLeague(League):
     pass
+
+
+class FootballTeamInFootballGame(models.Model):
+    game = models.ForeignKey(FootballGame, on_delete=models.CASCADE)
+    team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE)
+    team_score = models.IntegerField(blank=True, null=True)
+    property_percent = models.IntegerField(blank=True, null=True)
+
+
+class FootballPlayerInFootballGame(models.Model):
+    game = models.ForeignKey(FootballGame, on_delete=models.CASCADE)
+    player = models.ForeignKey(FootballPlayer, on_delete=models.CASCADE)
+    main_player = models.BooleanField(blank=True, null=True)
+    time_of_change = models.TimeField(blank=True, null=True)

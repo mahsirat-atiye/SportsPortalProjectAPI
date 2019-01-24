@@ -8,8 +8,8 @@ class Human(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     birth_day = models.DateField()
-    height = models.DecimalField(max_digits=2, max_length=5, decimal_places=2)
-    weight = models.DecimalField(max_digits=2, max_length=5, decimal_places=2)
+    height = models.IntegerField()
+    weight = models.IntegerField()
     image = models.ImageField(upload_to='human_images', blank=True)
 
     class Meta:
@@ -37,14 +37,6 @@ class Team(models.Model):
 
 
 class Game(models.Model):
-    # first_team = models.OneToOneField(Team, on_delete=models.CASCADE)
-    # second_team = models.OneToOneField(Team, on_delete=models.CASCADE)
-
-    first_team_score = models.IntegerField()
-    second_team_score = models.IntegerField()
-
-    first_team_percentage_possession = models.IntegerField()
-    # must be less than 100
 
     report = models.TextField(blank=True, null=True)
 

@@ -17,6 +17,8 @@ admin.site.register(FootballNonPlayer)
 admin.site.register(FootballTeam)
 admin.site.register(FootballLeague)
 
+admin.site.register(FootballTeamInFootballGame)
+admin.site.register(FootballPlayerInFootballGame)
 admin.site.register(News)
 admin.site.register(Resource)
 admin.site.register(Tag)

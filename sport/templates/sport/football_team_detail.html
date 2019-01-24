@@ -6,6 +6,27 @@
 </head>
 <body>
 <h1>{{ team.name }}</h1>
+
+<form action="{% url 'sport:football-team-detail' team.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="part" value="filter_news">
+    <p>
+        <input type="radio" name="choice" value="tag" id="choice 1">
+        <label for="choice 1">براساس تگ</label>
+    </p>
+    <p>
+        <input type="radio" name="choice" value="title" id="choice 2">
+        <label for="choice 2">براساس عنوان</label>
+    </p>
+    <p>
+        <input type="radio" name="choice" value="text" id="choice 3">
+        <label for="choice 3">براساس متن</label>
+    </p>
+
+    <input type="submit" value="فیلتر">
+</form>
+
+
 {% if related_news %}
     <h1>اخبار مرتبط</h1>
     <ul>
@@ -15,6 +36,7 @@
                 <a href="{% url 'sport:news-detail' n.id %}">
                     {{ n.title }}
                 </a>
+                <p>{{ n.text }}</p>
 
 
             </li>
@@ -31,19 +53,73 @@
 {% if team.footballplayer_set.all %}
     <h1>بازیکنان</h1>
     <ul>
-        {% for p in team.footballplayer_set %}
+        {% for p in team.footballplayer_set.all %}
             <li>
-                {##}
-                {#                                <a href="{% url 'sport:news-detail' n.id %}">#}
-                {#                                    {{ n.title }}#}
-                {#                                </a>#}
-                <p>{{ p.first_name }} {{ p.last_name }} {{ p.post }}</p>
+                <a href="{% url 'sport:football-player-detail' p.id %}">
+                    {{ p.first_name }} {{ p.last_name }}
+                </a>
 
+
+                {#                 todo posts must get better#}
             </li>
         {% endfor %}
     </ul>
 {% else %}
     <p>بازیکنی برای این تیم وجود ندارد</p>
 {% endif %}
+
+
+{% if team.footballnonplayer_set.all %}
+    <h1>غیر بازیکنان</h1>
+    <ul>
+        {% for np in team.footballnonplayer_set.all %}
+            <li>
+                <p>
+                    {{ np.first_name }} {{ np.last_name }}
+                </p>
+
+
+                {#                 todo posts must get better#}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p> غیر بازیکنی برای این تیم وجود ندارد</p>
+{% endif %}
+
+
+
+
+{% if games %}
+    <h1>بازی ها</h1>
+    <form action="{% url 'sport:football-team-detail' team.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="part" value="filter_games">
+        <input type="radio" name="choice" value="winning_losing" id="choice 11">
+        <label for="choice 11">براساس برد باخت مساوی</label>
+        <input type="radio" name="choice" value="opponent_team" id="choice 12">
+        <label for="choice 12">براساس تیم حریف</label>
+
+
+        <input type="submit" value="تغییر چینش">
+    </form>
+
+    <ul>
+        {% for g in games %}
+            <li>
+                <a href="{% url 'sport:football-game-detail' g.id %}">
+                    بازی
+                </a>
+                {% for tg in g.footballteaminfootballgame_set.all %}
+                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                {% endfor %}
+                {#                    todo : games must have better appeatrence#}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>بازی برای این تیم وجود ندارد</p>
+{% endif %}
+
 </body>
 </html>
