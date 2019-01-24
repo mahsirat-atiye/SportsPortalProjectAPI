@@ -1,11 +1,17 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+TYPE_CHOICES = (
+    ('F', 'فوتبال'),
+    ('B', 'بسکتبال')
+)
+
 
 class News(models.Model):
+    type = models.CharField(max_length=1, choices=TYPE_CHOICES, default='F')
     title = models.CharField(max_length=100)
     text = models.TextField()
-    publish_date = models.DateField
+    publish_date = models.DateField()
 
 
 # tags and resources and related teams and related players were handled by many to many relationship

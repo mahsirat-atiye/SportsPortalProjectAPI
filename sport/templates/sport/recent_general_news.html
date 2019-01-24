@@ -5,6 +5,35 @@
     <title>Recent General News</title>
 </head>
 <body>
+{% if recent_news %}
+
+    <ul>
+        {% for n in recent_news %}
+            <li>
+
+                                <a href="{% url 'sport:news-detail' n.id %}">
+                                    {{ n.title }}
+                                </a>
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>
+        No news yet!
+    </p>
+{% endif %}
+
+<form action="{% url 'sport:last-ten' %}" method="post">
+    {% csrf_token %}
+    تعداد اخباری که می خواهید مشاهده کنید را وارد کنید
+    <br>
+    <input type="number" name="number" value="10">
+    <br>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
 
 </body>
 </html>

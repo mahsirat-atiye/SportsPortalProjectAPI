@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News Detail</title>
+</head>
+<body>
+
+<h1>{{ news.title }}</h1>
+<h3>{{ news.publish_date }}</h3>
+
+{% if news.resource_set.all %}
+    <h3>منابع</h3>
+    <ul>
+        {% for r in news.resource_set.all %}
+            <li>
+                <p> {{ r.name }}</p>
+            </li>
+
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>منبع ندارد!</p>
+{% endif %}
+
+
+<p>{{ news.text }}</p>
+
+
+
+
+{% if news.tag_set.all %}
+    <h3>تگ های مرتبط</h3>
+    <ul>
+        {% for t in news.tag_set.all %}
+            <li>
+                <p> {{ t.text }}</p>
+            </li>
+
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>تگ مرتبط ندارد!</p>
+{% endif %}
+
+{% if related_news %}
+    <h3>خبرهای مرتبط</h3>
+    <ul>
+        {% for rn in related_news %}
+            <li>
+                <p> {{ rn.title }}</p>
+            </li>
+
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>خبر مرتبط ندارد!</p>
+{% endif %}
+</body>
+</html>
