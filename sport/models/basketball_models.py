@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from sport.models.abstract_models import Game, Human, Event, Player, Team
+from sport.models.abstract_models import Game, Human, Event, Player, Team, League
 
 BASKETBALL_PLAYER_EVENT_CHOICES = (
     ('2PT', 'پرتاب دو امتیازی'),
@@ -23,6 +23,10 @@ BASKETBALL_NON_PLAYER_POST_CHOICES = (
 
 
 class BasketballTeam(Team):
+    pass
+
+
+class BasketballLeague(League):
     pass
 
 

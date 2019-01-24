@@ -5,12 +5,12 @@ from sport.models.general_models import News
 
 
 class Human(models.Model):
-    sport_type = models.CharField(max_length=1, choices=SPORT_TYPE_CHOICES)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     birth_day = models.DateField()
     height = models.DecimalField(max_digits=2, max_length=5)
     weight = models.DecimalField(max_digits=2, max_length=5)
+    image = models.ImageField(upload_to='human_images', blank=True)
 
     #     todo : images of human
 
@@ -30,6 +30,9 @@ class Team(models.Model):
     name = models.CharField(max_length=100)
     followers = models.ManyToManyField(User)
     news = models.ManyToManyField(News)
+
+    class Meta:
+        abstract = True
 
 
 #     players & non players handled by one-to-one
@@ -75,6 +78,3 @@ class Player(Human):
     # order by post js
     class Meta:
         abstract = True
-
-
-
