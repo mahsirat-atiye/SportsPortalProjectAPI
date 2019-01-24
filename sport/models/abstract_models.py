@@ -8,11 +8,9 @@ class Human(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     birth_day = models.DateField()
-    height = models.DecimalField(max_digits=2, max_length=5)
-    weight = models.DecimalField(max_digits=2, max_length=5)
+    height = models.DecimalField(max_digits=2, max_length=5, decimal_places=2)
+    weight = models.DecimalField(max_digits=2, max_length=5, decimal_places=2)
     image = models.ImageField(upload_to='human_images', blank=True)
-
-    #     todo : images of human
 
     class Meta:
         abstract = True

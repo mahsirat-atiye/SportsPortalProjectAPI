@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'sport.apps.SportConfig',
+    'sport.apps.SportConfig',
     'leads',
     'rest_framework',
 ]

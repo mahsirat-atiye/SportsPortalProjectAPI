@@ -31,8 +31,7 @@ class BasketballLeague(League):
 
 
 class BasketballGame(Game):
-    first_team = models.OneToOneField(BasketballTeam, on_delete=models.CASCADE)
-    second_team = models.OneToOneField(BasketballTeam, on_delete=models.CASCADE)
+    teams = models.ManyToManyField(BasketballTeam)
 
 
 class BasketballPlayer(Player):

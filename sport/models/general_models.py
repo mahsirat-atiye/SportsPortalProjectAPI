@@ -5,7 +5,7 @@ from django.db import models
 class News(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField()
-    publish_date = models.DecimalField()
+    publish_date = models.DateField
 
 
 # tags and resources and related teams and related players were handled by many to many relationship
