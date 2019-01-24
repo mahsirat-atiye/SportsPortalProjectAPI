@@ -144,35 +144,7 @@ def football_player_detail_view(request, player_id):
     else:
         events = player.footballevent_set.all()
 
-    total_G = 0
-    total_PG = 0
-    total_YC = 0
-    total_RC = 0
-    total_E = 0
-    total_P = 0
-    total_CH = 0
-    total_CO = 0
-    total_SG = 0
-
-    for e in events:
-        if e.event_type == 'G':
-            total_G += 1
-        elif e.event_type == 'PG':
-            total_PG += 1
-        elif e.event_type == 'YC':
-            total_YC += 1
-        elif e.event_type == 'RC':
-            total_RC += 1
-        elif e.event_type == 'E':
-            total_E += 1
-        elif e.event_type == 'P':
-            total_P += 1
-        elif e.event_type == 'CH':
-            total_CH += 1
-        elif e.event_type == 'CO':
-            total_CO += 1
-        elif e.event_type == 'SG':
-            total_SG += 1
+    details = get_details(events)
 
     news = News.objects.all().order_by('-publish_date')
     related_news = set([])
@@ -210,24 +182,102 @@ def football_player_detail_view(request, player_id):
     context = {
         'player': player,
         'related_news': related_news,
-        'total_G': total_G,
-        'total_PG': total_PG,
-        'total_YC': total_YC,
-        'total_RC': total_RC,
-        'total_E': total_E,
-        'total_P': total_P,
-        'total_CH': total_CH,
-        'total_CO': total_CO,
-        'total_SG': total_SG
-
+        'details': details
     }
+    # context.update(details)
 
     return render(request, 'sport/football_player_detail.html', context)
 
 
 def football_game_detail_view(request, game_id):
     game = get_object_or_404(FootballGame, pk=game_id)
+    first_team = game.footballteaminfootballgame_set.all()[0].team
+    events_ = game.footballevent_set.all()
+    events = []
+    for e in events_:
+        if e.doer.team == first_team:
+            events.append(e)
+    total_G = 0
+    total_PG = 0
+    total_YC = 0
+    total_RC = 0
+    total_E = 0
+    total_P = 0
+    total_CH = 0
+    total_CO = 0
+    total_SG = 0
+
+    for e in events:
+        if e.event_type == 'G':
+            total_G += 1
+        elif e.event_type == 'PG':
+            total_PG += 1
+        elif e.event_type == 'YC':
+            total_YC += 1
+        elif e.event_type == 'RC':
+            total_RC += 1
+        elif e.event_type == 'E':
+            total_E += 1
+        elif e.event_type == 'P':
+            total_P += 1
+        elif e.event_type == 'CH':
+            total_CH += 1
+        elif e.event_type == 'CO':
+            total_CO += 1
+        elif e.event_type == 'SG':
+            total_SG += 1
     context = {
-        'game': game
+        'game': game,
+        'detail':
+            {'total_G': total_G,
+             'total_PG': total_PG,
+             'total_YC': total_YC,
+             'total_RC': total_RC,
+             'total_E': total_E,
+             'total_P': total_P,
+             'total_CH': total_CH,
+             'total_CO': total_CO,
+             'total_SG': total_SG}
     }
     return render(request, 'sport/football_player_detail.html', context)
+
+
+def get_details(events):
+    total_G = 0
+    total_PG = 0
+    total_YC = 0
+    total_RC = 0
+    total_E = 0
+    total_P = 0
+    total_CH = 0
+    total_CO = 0
+    total_SG = 0
+
+    for e in events:
+        if e.event_type == 'G':
+            total_G += 1
+        elif e.event_type == 'PG':
+            total_PG += 1
+        elif e.event_type == 'YC':
+            total_YC += 1
+        elif e.event_type == 'RC':
+            total_RC += 1
+        elif e.event_type == 'E':
+            total_E += 1
+        elif e.event_type == 'P':
+            total_P += 1
+        elif e.event_type == 'CH':
+            total_CH += 1
+        elif e.event_type == 'CO':
+            total_CO += 1
+        elif e.event_type == 'SG':
+            total_SG += 1
+    return {'total_G': total_G,
+            'total_PG': total_PG,
+            'total_YC': total_YC,
+            'total_RC': total_RC,
+            'total_E': total_E,
+            'total_P': total_P,
+            'total_CH': total_CH,
+            'total_CO': total_CO,
+            'total_SG': total_SG}

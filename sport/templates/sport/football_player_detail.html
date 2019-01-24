@@ -5,6 +5,9 @@
     <title>Football Player Detail</title>
 </head>
 <body>
+{% load custom_tags %}
+
+
 <h1>{{ player.first_name }} {{ player.last_name }}</h1>
 <img src="{{ player.image.url }}" alt="image of player can not be loaded">
 
@@ -14,17 +17,17 @@
 <p>{{ player.birth_day }} تاریخ تولد: </p>
 <h1>آمار</h1>
 
-<p>{{ total_G }}تعداد گل </p>
-<p>{{ total_PG }}تعداد پاس گل </p>
-<p>{{ total_YC }}تعداد کارت زرد </p>
-<p>{{ total_RC }}تعداد کارت قرمز </p>
-<p>{{ total_E }} تعداد خطا </p>
-<p>{{ total_P }}تعداد پنالتی </p>
-<p>{{ total_CH }}تعداد تعویض </p>
-<p>{{ total_CO }}تعداد کرنر </p>
-<p>{{ total_SG }}تعداد موقعیت گل </p>
+<p>{{ details|get_item:"total_G" }}تعداد گل </p>
+<p>{{ details|get_item:"total_PG" }}تعداد پاس گل </p>
+<p>{{ details|get_item:"total_YC" }}تعداد کارت زرد </p>
+<p>{{ details|get_item:"total_RC" }}تعداد کارت قرمز </p>
+<p>{{ details|get_item:"total_E" }} تعداد خطا </p>
+<p>{{ details|get_item:"total_P" }}تعداد پنالتی </p>
+<p>{{ details|get_item:"total_CH" }}تعداد تعویض </p>
+<p>{{ details|get_item:"total_CO" }}تعداد کرنر </p>
+<p>{{ details|get_item:"total_SG" }}تعداد موقعیت گل </p>
 
-<form action="{% url 'sport:football-player-detail' player.id%}" method="post">
+<form action="{% url 'sport:football-player-detail' player.id %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="part" value="for_season">
     لطفا فصلی که می خواهید آمار مربوط به آن را مشاهده کنید را وارد کنید
