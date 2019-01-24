@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teams</title>
+</head>
+<body>
+
+
+{% if teams %}
+    <h1>تیم ها</h1>
+    <ul>
+        {% for t in teams %}
+            <li>
+
+                                <a href="{% url 'sport:football-team-detail' t.id %}">
+                                    {{ t.name }}
+                                </a>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>هنوز تیمی ثبت نشده است!</p>
+{% endif %}
+
+</body>
+</html>

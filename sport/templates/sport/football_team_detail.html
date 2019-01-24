@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Football Team Detail</title>
+</head>
+<body>
+<h1>{{ team.name }}</h1>
+{% if related_news %}
+    <h1>اخبار مرتبط</h1>
+    <ul>
+        {% for n in related_news %}
+            <li>
+
+                <a href="{% url 'sport:news-detail' n.id %}">
+                    {{ n.title }}
+                </a>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>اخباری مرتبط با این تیم وجود ندارد</p>
+{% endif %}
+
+
+
+{#team.footballplayer_set#}
+
+{% if team.footballplayer_set.all %}
+    <h1>بازیکنان</h1>
+    <ul>
+        {% for p in team.footballplayer_set %}
+            <li>
+                {##}
+                {#                                <a href="{% url 'sport:news-detail' n.id %}">#}
+                {#                                    {{ n.title }}#}
+                {#                                </a>#}
+                <p>{{ p.first_name }} {{ p.last_name }} {{ p.post }}</p>
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>بازیکنی برای این تیم وجود ندارد</p>
+{% endif %}
+</body>
+</html>

@@ -27,7 +27,7 @@ class League(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100)
     followers = models.ManyToManyField(User)
-    news = models.ManyToManyField(News)
+    # news = models.ManyToManyField(News)
 
     class Meta:
         abstract = True

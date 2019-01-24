@@ -48,7 +48,10 @@
     <ul>
         {% for rn in related_news %}
             <li>
-                <p> {{ rn.title }}</p>
+                <a href="{% url 'sport:news-detail' rn.id %}">
+                    {{ rn.title }}
+                </a>
+
             </li>
 
         {% endfor %}
