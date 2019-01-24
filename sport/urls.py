@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-
-    path('api/lead/', views.LeadListCreate.as_view()),
+    #
+    # path('last-ten-news/general/football/',),
+    # path('last-ten-news/favorite/football/',),
 
 ]

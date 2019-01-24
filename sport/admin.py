@@ -12,7 +12,7 @@ admin.site.register(BasketballLeague)
 
 admin.site.register(FootballPlayer)
 admin.site.register(FootballEvent)
-admin.site.register(BasketballGame)
+admin.site.register(FootballGame)
 admin.site.register(FootballNonPlayer)
 admin.site.register(FootballTeam)
 admin.site.register(FootballLeague)
