@@ -8,6 +8,7 @@ from sport.models import News, FootballTeam, FootballPlayer, FootballGame, Footb
 from django.utils import timezone
 import logging
 
+
 #
 # class RecentGeneralNews(generic.ListView):
 #     template_name = 'sport/recent_general_news.html'
@@ -60,8 +61,12 @@ def football_team_detail_view(request, team_id):
                 related_news = get_related_news_by_text(news, team.name)
         elif request.POST["part"] == 'winning_losing':
             games = filter_games_by_winning_loosing(team_in_games, request.POST["choice"])
-        else:
+        elif request.POST["part"] == 'opponent_team':
             games = filter_games_by_opponent(games, team=team, text=request.POST["opponent_team"])
+        elif request.POST['part'] == 'follow':
+            team.followers.add(request.user)
+            logger = logging.getLogger(__name__)
+            logger.info('با موفقیت از این تیم پیروی شد!')
 
     context = {
         'team': team,

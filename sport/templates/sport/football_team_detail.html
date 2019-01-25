@@ -195,5 +195,12 @@
     <p>بازی برای این تیم وجود ندارد</p>
 {% endif %}
 
+<form action="{% url 'sport:football-team-detail' team.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="part" value="follow">
+
+    <input type="submit" value="فالو">
+</form>
+
 </body>
 </html>
