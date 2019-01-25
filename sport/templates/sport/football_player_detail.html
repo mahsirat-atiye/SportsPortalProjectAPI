@@ -75,5 +75,13 @@
 {% else %}
     <p>اخباری مرتبط با این بازیکن وجود ندارد</p>
 {% endif %}
+
+<form action="{% url 'sport:football-player-detail' player.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="part" value="follow">
+
+    <input type="submit" value="فالو">
+</form>
+
 </body>
 </html>

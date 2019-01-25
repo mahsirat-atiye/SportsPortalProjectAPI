@@ -97,7 +97,8 @@ def football_player_detail_view(request, player_id):
             related_news = get_related_news_by_title(news, player.first_name, player.last_name)
         else:
             related_news = get_related_news_by_text(news, player.first_name, player.last_name)
-
+    if request.POST and request.POST['part'] == 'follow':
+        player.followers.add(request.user)
     context = {
         'player': player,
         'related_news': related_news,
