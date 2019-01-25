@@ -126,7 +126,7 @@ def football_game_detail_view(request, game_id):
         'teams': teams
 
     }
-    return render(request, 'sport/football_player_detail.html', context)
+    return render(request, 'sport/football_game_detail.html', context)
 
 
 def get_details(events):

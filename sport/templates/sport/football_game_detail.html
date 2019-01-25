@@ -5,7 +5,82 @@
     <title>Football Game Detail</title>
 </head>
 <body>
-<h1>بازی</h1>
+{% load custom_tags %}
+<h1>
+    {{ game.date }}بازی</h1>
+{% for t in teams %}
+    <h2>
+        {{ t.team.name }} {{ t.team_score }} {{ t.property_percent }}
+        {% if  t.best_player %}
+            {{ t.best_player }}
+        {% endif %}
+    </h2>
+{% endfor %}
+<h1>آمار مربوط به تیم اول</h1>
+
+<p>{{ first_team_details|get_item:"total_G" }}تعداد گل </p>
+<p>{{ first_team_details|get_item:"total_PG" }}تعداد پاس گل </p>
+<p>{{ first_team_details|get_item:"total_YC" }}تعداد کارت زرد </p>
+<p>{{ first_team_details|get_item:"total_RC" }}تعداد کارت قرمز </p>
+<p>{{ first_team_details|get_item:"total_E" }} تعداد خطا </p>
+<p>{{ first_team_details|get_item:"total_P" }}تعداد پنالتی </p>
+<p>{{ first_team_details|get_item:"total_CH" }}تعداد تعویض </p>
+<p>{{ first_team_details|get_item:"total_CO" }}تعداد کرنر </p>
+<p>{{ first_team_details|get_item:"total_SG" }}تعداد موقعیت گل </p>
+
+<h1>آمار مربوط به تیم دوم</h1>
+
+<p>{{ second_team_details|get_item:"total_G" }}تعداد گل </p>
+<p>{{ second_team_details|get_item:"total_PG" }}تعداد پاس گل </p>
+<p>{{ second_team_details|get_item:"total_YC" }}تعداد کارت زرد </p>
+<p>{{ second_team_details|get_item:"total_RC" }}تعداد کارت قرمز </p>
+<p>{{ second_team_details|get_item:"total_E" }} تعداد خطا </p>
+<p>{{ second_team_details|get_item:"total_P" }}تعداد پنالتی </p>
+<p>{{ second_team_details|get_item:"total_CH" }}تعداد تعویض </p>
+<p>{{ second_team_details|get_item:"total_CO" }}تعداد کرنر </p>
+<p>{{ second_team_details|get_item:"total_SG" }}تعداد موقعیت گل </p>
+
+<h1>خط زمانی</h1>
+{% for e in game.footballevent_set.all %}
+    <p>{{ e.exact_time }} {{ e.doer.first_name }} {{ e.doer.last_name }} {{ e.event_type }}</p>
+{% endfor %}
+{% if game.report %}
+    <h1>
+        گزارش لحظه به لحظه
+    </h1>
+    <p>
+        {{ game.report }}
+    </p>
+{% else %}
+{% endif %}
+{% if game.footballimage_set.all %}
+    <h1>تصاویر مرتبط با بازی</h1>
+    {% for i in game.footballimage_set.all %}
+        <img src="{{ i.image.url }}" alt="image of game acn not be loaded">
+        <p>{{ i.image.url }}</p>
+        <p>{{ i.caption }}</p>
+    {% endfor %}
+    {% else %}
+    <p>تصویری مرتبط با این بازی وجود ندارد</p>
+{% endif %}
+
+{% if game.footballvideo_set.all %}
+    <h1>فیلم های مرتبط با ابین  بازی </h1>
+    {% for v in game.footballvideo_set.all %}
+        <video width="400" controls>
+        <source src="{{ v.url }}">
+        </video>
+        <p>{{ v.url }}</p>
+        <p>{{ v.caption }}</p>
+    {% endfor %}
+    {% else %}
+    <p>فیلمی مرتبط با این بازی وجود ندارد!</p>
+{% endif %}
+
 
 </body>
 </html>
+{#'game': game,#}
+{#        'first_team_details': first_team_details,#}
+{#        'second_team_details': second_team_details,#}
+{#        'teams': teams#}

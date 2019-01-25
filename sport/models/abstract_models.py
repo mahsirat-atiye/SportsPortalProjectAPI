@@ -56,7 +56,7 @@ class Game(models.Model):
     # league = models.ForeignKey(League, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ('date',)
+        ordering = ('-date',)
         abstract = True
 
 
@@ -68,6 +68,7 @@ class Event(models.Model):
     exact_time = models.DateTimeField()
 
     class Meta:
+        ordering = ('-exact_time',)
         abstract = True
 
 
@@ -77,5 +78,31 @@ class Player(Human):
     news = models.ManyToManyField(News)
 
     # order by post js
+    class Meta:
+        abstract = True
+
+
+class Image(models.Model):
+    caption = models.CharField(max_length=250, default="")
+    image = models.ImageField(upload_to='general_images', blank=True)
+    # football_game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)
+    news = models.ManyToManyField(News, blank=True, null=True)
+
+    def __str__(self):
+        s = self.caption
+        return s
+
+    class Meta:
+        abstract = True
+
+
+class Video(models.Model):
+    caption = models.CharField(max_length=250, default="")
+    video = models.FileField(upload_to='general_videos', blank=True, null=True)
+
+    def __str__(self):
+        s = self.caption
+        return s
+
     class Meta:
         abstract = True

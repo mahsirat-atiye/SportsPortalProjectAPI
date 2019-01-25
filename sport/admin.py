@@ -16,6 +16,8 @@ admin.site.register(FootballGame)
 admin.site.register(FootballNonPlayer)
 admin.site.register(FootballTeam)
 admin.site.register(FootballLeague)
+admin.site.register(FootballImage)
+admin.site.register(FootballVideo)
 
 admin.site.register(FootballTeamInFootballGame)
 admin.site.register(FootballPlayerInFootballGame)

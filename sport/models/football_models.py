@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from sport.models.abstract_models import Human, Event, Player, Game, Team, League
+from sport.models.abstract_models import Human, Event, Player, Game, Team, League, Image, Video
 
 FOOTBALL_PLAYER_EVENT_CHOICES = (
     ('G', 'گل'),
@@ -73,6 +73,7 @@ class FootballTeamInFootballGame(models.Model):
     team_score = models.IntegerField(blank=True, null=True)
     property_percent = models.IntegerField(blank=True, null=True)
     situation = models.CharField(max_length=3, choices=TEAM_SITUATION_IN_GAME, blank=True, null=True)
+    best_player = models.ForeignKey(FootballPlayer, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         s = self.team.name + " in game " + str(self.game.date)
@@ -89,3 +90,11 @@ class FootballPlayerInFootballGame(models.Model):
         s = self.player.first_name + "  " + self.player.last_name
         " in game " + str(self.game.date)
         return s
+
+
+class FootballImage(Image):
+    football_game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)
+
+
+class FootballVideo(Video):
+    football_game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)

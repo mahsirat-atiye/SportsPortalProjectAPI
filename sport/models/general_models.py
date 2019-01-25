@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+
 TYPE_CHOICES = (
     ('F', 'فوتبال'),
     ('B', 'بسکتبال')
@@ -52,15 +53,9 @@ class Comment(models.Model):
     news = models.ForeignKey(News, on_delete=models.CASCADE)
 
 
-class Image(models.Model):
-    #     todo image
-    pass
 
 
-class Video(models.Model):
-    # todo
-    #     video
-    pass
+
 
 # class FootballPlayerInGame(models.Model):
 #     game = models.ForeignKey(Game, on_delete=models.CASCADE)
