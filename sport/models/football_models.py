@@ -26,7 +26,11 @@ FOOTBALL_NON_PLAYER_POST_CHOICES = (
     ('CH', 'کمک مربی'),
 )
 
-
+TEAM_SITUATION_IN_GAME = (
+    ('AW', 'برد'),
+    ('BE', 'مساوی'),
+    ('CL', 'باخت')
+)
 class FootballTeam(Team):
     pass
 
@@ -61,6 +65,7 @@ class FootballTeamInFootballGame(models.Model):
     team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE)
     team_score = models.IntegerField(blank=True, null=True)
     property_percent = models.IntegerField(blank=True, null=True)
+    situation = models.CharField(max_length=3, choices=TEAM_SITUATION_IN_GAME, blank=True, null=True)
 
 
 class FootballPlayerInFootballGame(models.Model):

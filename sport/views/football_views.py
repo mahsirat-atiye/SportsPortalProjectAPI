@@ -40,87 +40,28 @@ def football_teams(request):
 
 
 def football_team_detail_view(request, team_id):
-    related_news = set([])
-    news = News.objects.all()
+    news = News.objects.all().order_by('-publish_date')
+
     team = get_object_or_404(FootballTeam, pk=team_id)
+    team_in_games = team.footballteaminfootballgame_set.all().order_by('team_score')
+
+    games = []
+    for tg in team_in_games:
+        games.append(tg.game)
+    related_news = get_related_news_by_all_criteria(news, team.name)
 
     if request.POST:
-        if request.POST["part"] == 'filter_games':
-
-            if request.POST['choice'] == 'opponent_team':
-                team_in_games = team.footballteaminfootballgame_set.all()
-
-                games = []
-                for tg in team_in_games:
-                    games.append(tg.game)
-
-                def sort_by_opponent(g):
-                    teams_in_game = g.footballteaminfootballgame_set.all()
-                    if teams_in_game[0].team == team:
-                        return teams_in_game[1].team.name
-                    return teams_in_game[0].team.name
-
-                games.sort(key=sort_by_opponent)
+        if request.POST["part"] == 'filter_news':
+            if request.POST['choice'] == 'tag':
+                related_news = get_related_news_by_tag(news, team.name)
+            elif request.POST['choice'] == 'title':
+                related_news = get_related_news_by_title(news, team.name)
             else:
-                team_in_games = team.footballteaminfootballgame_set.all().order_by('team_score')
-                games = []
-                for tg in team_in_games:
-                    games.append(tg.game)
-            for n in news:
-                for t in n.tag_set.all():
-                    if t.text.__contains__(team.name):
-                        related_news.add(n)
-                if n.title.__contains__(team.name):
-                    related_news.add(n)
-                if n.text.__contains__(team.name):
-                    related_news.add(n)
+                related_news = get_related_news_by_text(news, team.name)
+        elif request.POST["part"] == 'winning_losing':
+            games = filter_games_by_winning_loosing(team_in_games, request.POST["choice"])
         else:
-            if request.POST["choice"] == 'tag':
-                for n in news:
-                    for t in n.tag_set.all():
-                        if t.text.__contains__(team.name):
-                            related_news.add(n)
-
-            elif request.POST["choice"] == 'title':
-                for n in news:
-
-                    if n.title.__contains__(team.name):
-                        related_news.add(n)
-
-            else:
-                for n in news:
-
-                    if n.text.__contains__(team.name):
-                        related_news.add(n)
-            games = []
-            team_in_games = team.footballteaminfootballgame_set.all()
-            for tg in team_in_games:
-                games.append(tg.game)
-
-            def sort_game_by_date(g):
-                return g.date
-
-            games.sort(key=sort_game_by_date, reverse=True)
-    else:
-        team_in_games = team.footballteaminfootballgame_set.all()
-        games = []
-        for tg in team_in_games:
-            games.append(tg.game)
-
-        def sort_game_by_date(g):
-            return g.date
-
-        games.sort(key=sort_game_by_date, reverse=True)
-
-        for n in news:
-            for t in n.tag_set.all():
-                if t.text.__contains__(team.name):
-                    related_news.add(n)
-            if n.title.__contains__(team.name):
-                related_news.add(n)
-            if n.text.__contains__(team.name):
-                related_news.add(n)
-    related_news = list(related_news)
+            games = filter_games_by_opponent(games, team=team, text=request.POST["opponent_team"])
 
     context = {
         'team': team,
@@ -132,6 +73,7 @@ def football_team_detail_view(request, team_id):
 
 
 def football_player_detail_view(request, player_id):
+    related_news = set([])
     player = get_object_or_404(FootballPlayer, pk=player_id)
     if request.POST and request.POST['part'] == 'for_season':
         # todo
@@ -147,7 +89,7 @@ def football_player_detail_view(request, player_id):
     details = get_details(events)
 
     news = News.objects.all().order_by('-publish_date')
-    related_news = set([])
+
     if request.POST and request.POST['part'] == 'filter_news':
         if request.POST['choice'] == 'tag':
             for n in news:
@@ -191,53 +133,21 @@ def football_player_detail_view(request, player_id):
 
 def football_game_detail_view(request, game_id):
     game = get_object_or_404(FootballGame, pk=game_id)
-    first_team = game.footballteaminfootballgame_set.all()[0].team
-    events_ = game.footballevent_set.all()
-    events = []
-    for e in events_:
-        if e.doer.team == first_team:
-            events.append(e)
-    total_G = 0
-    total_PG = 0
-    total_YC = 0
-    total_RC = 0
-    total_E = 0
-    total_P = 0
-    total_CH = 0
-    total_CO = 0
-    total_SG = 0
+    teams = game.footballteaminfootballgame_set.all()
+    team = teams[0].team
+    events = get_events_by_game_and_team(game, team)
+    first_team_details = get_details(events)
 
-    for e in events:
-        if e.event_type == 'G':
-            total_G += 1
-        elif e.event_type == 'PG':
-            total_PG += 1
-        elif e.event_type == 'YC':
-            total_YC += 1
-        elif e.event_type == 'RC':
-            total_RC += 1
-        elif e.event_type == 'E':
-            total_E += 1
-        elif e.event_type == 'P':
-            total_P += 1
-        elif e.event_type == 'CH':
-            total_CH += 1
-        elif e.event_type == 'CO':
-            total_CO += 1
-        elif e.event_type == 'SG':
-            total_SG += 1
+    team = teams[1].team
+
+    events = get_events_by_game_and_team(game, team)
+    second_team_details = get_details(events)
     context = {
         'game': game,
-        'detail':
-            {'total_G': total_G,
-             'total_PG': total_PG,
-             'total_YC': total_YC,
-             'total_RC': total_RC,
-             'total_E': total_E,
-             'total_P': total_P,
-             'total_CH': total_CH,
-             'total_CO': total_CO,
-             'total_SG': total_SG}
+        'first_team_details': first_team_details,
+        'second_team_details': second_team_details,
+        'teams': teams
+
     }
     return render(request, 'sport/football_player_detail.html', context)
 
@@ -281,3 +191,84 @@ def get_details(events):
             'total_CH': total_CH,
             'total_CO': total_CO,
             'total_SG': total_SG}
+
+
+def get_events_by_game_and_team(game, team):
+    events_ = game.footballevent_set.all()
+    events = []
+    for e in events_:
+        if e.doer.team == team:
+            events.append(e)
+    return events
+
+
+def get_related_news_by_all_criteria(news, *special_text):
+    related_news = set([])
+    for st in special_text:
+        for n in news:
+            for t in n.tag_set.all():
+                if t.text.__contains__(st):
+                    related_news.add(n)
+            if n.title.__contains__(st):
+                related_news.add(n)
+            if n.text.__contains__(st):
+                related_news.add(n)
+    related_news = list(related_news)
+    return related_news
+
+
+def get_related_news_by_tag(news, *special_text):
+    related_news = set([])
+    for st in special_text:
+        for n in news:
+            for t in n.tag_set.all():
+                if t.text.__contains__(st):
+                    related_news.add(n)
+    related_news = list(related_news)
+    return related_news
+
+
+def get_related_news_by_title(news, *special_text):
+    related_news = set([])
+    for st in special_text:
+        for n in news:
+
+            if n.title.__contains__(st):
+                related_news.add(n)
+
+    related_news = list(related_news)
+    return related_news
+
+
+def get_related_news_by_text(news, *special_text):
+    related_news = set([])
+    for st in special_text:
+        for n in news:
+            if n.text.__contains__(st):
+                related_news.add(n)
+    related_news = list(related_news)
+    return related_news
+
+
+def filter_games_by_opponent(games, team, text):
+    filtered_games = []
+    for g in games:
+        teams_in_game = g.footballteaminfootballgame_set.all()
+        if teams_in_game[0].team == team:
+            opponent_name = teams_in_game[1].team.name
+
+        else:
+            opponent_name = teams_in_game[0].team.name
+
+        if opponent_name.__contains__(text):
+            filtered_games.append(g)
+
+    return filtered_games
+
+
+def filter_games_by_winning_loosing(team_in_games, situation_text):
+    games = []
+    for tg in team_in_games:
+        if tg.situation == situation_text:
+            games.append(tg.game)
+    return games

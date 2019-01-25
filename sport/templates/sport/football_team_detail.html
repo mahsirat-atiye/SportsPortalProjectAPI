@@ -153,14 +153,29 @@
     <h1>بازی ها</h1>
     <form action="{% url 'sport:football-team-detail' team.id %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="part" value="filter_games">
-        <input type="radio" name="choice" value="winning_losing" id="choice 11">
-        <label for="choice 11">براساس برد باخت مساوی</label>
-        <input type="radio" name="choice" value="opponent_team" id="choice 12">
-        <label for="choice 12">براساس تیم حریف</label>
+        <input type="hidden" name="part" value="winning_losing">
+        <p><label>براساس برد باخت مساوی</label>
+            <input type="radio" name="choice" value="AW" id="choice 11">
+            <label for="choice 11">برد</label>
+        </p>
+        <p><label>براساس برد باخت مساوی</label>
+            <input type="radio" name="choice" value="CL" id="choice 12">
+            <label for="choice 12">باخت</label>
+        </p>
+        <p><label>براساس برد باخت مساوی</label>
+            <input type="radio" name="choice" value="BE" id="choice 13">
+            <label for="choice 13">مساوی</label>
+        </p>
 
 
-        <input type="submit" value="تغییر چینش">
+        <input type="submit" value="فیلتر">
+    </form>
+    <form action="{% url 'sport:football-team-detail' team.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="part" value="opponent_team">
+        <input type="text" name="opponent_team" value="" id="choice 14">
+        <label for="choice 14">براساس تیم حریف</label>
+        <input type="submit" value="فیلتر">
     </form>
 
     <ul>
