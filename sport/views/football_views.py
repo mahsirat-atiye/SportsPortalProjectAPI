@@ -73,8 +73,9 @@ def football_team_detail_view(request, team_id):
 
 
 def football_player_detail_view(request, player_id):
-    related_news = set([])
+    news = News.objects.all().order_by('-publish_date')
     player = get_object_or_404(FootballPlayer, pk=player_id)
+    related_news = get_related_news_by_all_criteria(news, player.first_name, player.last_name)
     if request.POST and request.POST['part'] == 'for_season':
         # todo
         # مفهوم فصل در فوتبال با علی چک شود
@@ -88,39 +89,15 @@ def football_player_detail_view(request, player_id):
 
     details = get_details(events)
 
-    news = News.objects.all().order_by('-publish_date')
-
     if request.POST and request.POST['part'] == 'filter_news':
         if request.POST['choice'] == 'tag':
-            for n in news:
-                for t in n.tag_set.all():
-                    if t.text.__contains__(player.first_name) or t.text.__contains__(player.last_name):
-                        related_news.add(n)
+            related_news = get_related_news_by_tag(news, player.first_name, player.last_name)
 
         elif request.POST['choice'] == 'title':
-            for n in news:
-
-                if n.title.__contains__(player.first_name) or n.title.__contains__(player.last_name):
-                    related_news.add(n)
-
+            related_news = get_related_news_by_title(news, player.first_name, player.last_name)
         else:
-            for n in news:
+            related_news = get_related_news_by_text(news, player.first_name, player.last_name)
 
-                if n.text.__contains__(player.first_name) or n.text.__contains__(player.last_name):
-                    related_news.add(n)
-            pass
-    else:
-
-        for n in news:
-            for t in n.tag_set.all():
-                if t.text.__contains__(player.first_name) or t.text.__contains__(player.last_name):
-                    related_news.add(n)
-            if n.title.__contains__(player.first_name) or n.title.__contains__(player.last_name):
-                related_news.add(n)
-            if n.text.__contains__(player.first_name) or n.text.__contains__(player.last_name):
-                related_news.add(n)
-
-    related_news = list(related_news)
     context = {
         'player': player,
         'related_news': related_news,

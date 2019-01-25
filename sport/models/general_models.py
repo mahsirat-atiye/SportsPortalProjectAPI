@@ -13,6 +13,10 @@ class News(models.Model):
     text = models.TextField()
     publish_date = models.DateField()
 
+    def __str__(self):
+        s = self.title
+        return s
+
 
 # tags and resources and related teams and related players were handled by many to many relationship
 
@@ -32,6 +36,10 @@ class Resource(models.Model):
 class Tag(models.Model):
     text = models.CharField(max_length=100)
     news = models.ManyToManyField(News)
+
+    def __str__(self):
+        s = self.text
+        return s
 
 
 #     many tags for many pieces of news!
