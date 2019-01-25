@@ -42,7 +42,7 @@
 
 <h1>خط زمانی</h1>
 {% for e in game.footballevent_set.all %}
-    <p>{{ e.exact_time }} {{ e.doer.first_name }} {{ e.doer.last_name }} {{ e.event_type }}</p>
+    <p>{{ e.exact_time }} {{ e.doer.first_name }} {{ e.doer.last_name }} {{ e.get_event_type_display }}</p>
 {% endfor %}
 {% if game.report %}
     <h1>
@@ -77,6 +77,44 @@
     <p>فیلمی مرتبط با این بازی وجود ندارد!</p>
 {% endif %}
 
+
+{% if news_before %}
+    <h1> قبل از بازی اخبار مرتبط</h1>
+    <ul>
+        {% for n in news_before %}
+            <li>
+
+                <a href="{% url 'sport:news-detail' n.id %}">
+                    {{ n.title }}
+                </a>
+                <p>{{ n.text }}</p>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>اخباری مرتبط قبلی با این بازی وجود ندارد</p>
+{% endif %}
+
+{% if news_after %}
+    <h1>اخبار مرتبط حین یا بعد از بازی</h1>
+    <ul>
+        {% for n in news_after %}
+            <li>
+
+                <a href="{% url 'sport:news-detail' n.id %}">
+                    {{ n.title }}
+                </a>
+                <p>{{ n.text }}</p>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>اخباری مرتبط حین یا بعد با این بازی وجود ندارد</p>
+{% endif %}
 
 </body>
 </html>

@@ -119,11 +119,20 @@ def football_game_detail_view(request, game_id):
 
     events = get_events_by_game_and_team(game, team)
     second_team_details = get_details(events)
+
+    news = News.objects.all().filter(publish_date__lt=game.date).order_by('-publish_date')
+    news_before = get_related_news_to_game(news, teams[0].team.name, teams[1].team.name)
+
+    news = News.objects.all().filter(publish_date__gte=game.date).order_by('-publish_date')
+    news_after = get_related_news_to_game(news, teams[0].team.name, teams[1].team.name)
+
     context = {
         'game': game,
         'first_team_details': first_team_details,
         'second_team_details': second_team_details,
-        'teams': teams
+        'teams': teams,
+        'news_before': news_before,
+        'news_after': news_after
 
     }
     return render(request, 'sport/football_game_detail.html', context)
@@ -249,3 +258,15 @@ def filter_games_by_winning_loosing(team_in_games, situation_text):
         if tg.situation == situation_text:
             games.append(tg.game)
     return games
+
+
+def get_related_news_to_game(news, *team_names):
+    related_news = set([])
+
+    for n in news:
+        if n.text.__contains__(team_names[0]) and n.text.__contains__(team_names[1]):
+            related_news.add(n)
+        if n.title.__contains__(team_names[0]) and n.text.__contains__(team_names[1]):
+            related_news.add(n)
+    related_news = list(related_news)
+    return related_news
