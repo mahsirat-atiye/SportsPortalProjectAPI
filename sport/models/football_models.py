@@ -31,6 +31,8 @@ TEAM_SITUATION_IN_GAME = (
     ('BE', 'مساوی'),
     ('CL', 'باخت')
 )
+
+
 class FootballTeam(Team):
     pass
 
@@ -50,6 +52,11 @@ class FootballEvent(Event):
     event_type = models.CharField(max_length=3, choices=FOOTBALL_PLAYER_EVENT_CHOICES)
     doer = models.ForeignKey(FootballPlayer, on_delete=models.CASCADE)  # ?
 
+    def __str__(self):
+        s = self.doer.first_name + " " + self.doer.last_name + " in game " + str(
+            self.game.date) + "done" + self.event_type
+        return s
+
 
 class FootballNonPlayer(Human):
     team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE)
@@ -67,9 +74,18 @@ class FootballTeamInFootballGame(models.Model):
     property_percent = models.IntegerField(blank=True, null=True)
     situation = models.CharField(max_length=3, choices=TEAM_SITUATION_IN_GAME, blank=True, null=True)
 
+    def __str__(self):
+        s = self.team.name + " in game " + str(self.game.date)
+        return s
+
 
 class FootballPlayerInFootballGame(models.Model):
     game = models.ForeignKey(FootballGame, on_delete=models.CASCADE)
     player = models.ForeignKey(FootballPlayer, on_delete=models.CASCADE)
     main_player = models.BooleanField(blank=True, null=True)
     time_of_change = models.TimeField(blank=True, null=True)
+
+    def __str__(self):
+        s = self.player.first_name + "  " + self.player.last_name
+        " in game " + str(self.game.date)
+        return s

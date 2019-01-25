@@ -12,6 +12,10 @@ class Human(models.Model):
     weight = models.IntegerField()
     image = models.ImageField(upload_to='human_images', blank=True)
 
+    def __str__(self):
+        s = self.first_name + " " + self.last_name
+        return s
+
     class Meta:
         abstract = True
 
@@ -27,7 +31,11 @@ class League(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100)
     followers = models.ManyToManyField(User)
+
     # news = models.ManyToManyField(News)
+    def __str__(self):
+        s = self.name
+        return s
 
     class Meta:
         abstract = True
@@ -37,10 +45,13 @@ class Team(models.Model):
 
 
 class Game(models.Model):
-
     report = models.TextField(blank=True, null=True)
 
     date = models.DateField()
+
+    def __str__(self):
+        s = str(self.date)
+        return s
 
     # league = models.ForeignKey(League, on_delete=models.CASCADE)
 
