@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leagues</title>
+</head>
+<body>
+
+
+{% if current_leagues %}
+    <h1>لیگ های جاری</h1>
+    <ul>
+    {% for l in current_leagues %}
+        <li>
+        <a>{{ l.name }}{{ l.year }} {{ l.year|add:1}}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>هیچ لیگ جاری وجود ندارد! </p>
+{% endif %}
+
+{% if archive_leagues %}
+    <h1>لیگ های آرشیو</h1>
+    <ul>
+    {% for l in archive_leagues %}
+        <li>
+        <a>{{ l.name }}{{ l.year }} {{ l.year|add:1 }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>هیچ لیگ آرشیو وجود ندارد</p>
+{% endif %}
+
+</body>
+</html>
+{#'current_leagues': current_leagues,#}
+{#        'archive_leagues': archive_leagues#}

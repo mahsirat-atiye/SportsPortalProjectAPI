@@ -117,8 +117,21 @@
 {% endif %}
 
 </body>
+{% if first_team_players_in_game %}
+    <h1>اعضای تیم اول</h1>
+    {% for pg in first_team_players_in_game %}
+        {{ pg.player.first_name }} {{ pg.player.last_name }} {{ pg.main_player }} {{ pg.time_of_change }}
+    {% endfor %}
+    {% else %}
+    <p>اعضای تیم اول در این بازی مشخص نشده اند</p>
+{% endif %}
+
+{% if second_team_players_in_game %}
+    <h1>اعضای تیم دوم</h1>
+    {% for pg in second_team_players_in_game %}
+        {{ pg.player.first_name }} {{ pg.player.last_name }} {{ pg.main_player }} {{ pg.time_of_change }}
+    {% endfor %}
+    {% else %}
+    <p>اعضای تیم دوم در این بازی مشخص نشدخ اند.</p>
+{% endif %}
 </html>
-{#'game': game,#}
-{#        'first_team_details': first_team_details,#}
-{#        'second_team_details': second_team_details,#}
-{#        'teams': teams#}

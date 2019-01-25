@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
-from sport.models import News, FootballTeam, FootballPlayer, FootballGame
+from sport.models import News, FootballTeam, FootballPlayer, FootballGame, FootballLeague
 from django.utils import timezone
 
 
@@ -126,18 +126,42 @@ def football_game_detail_view(request, game_id):
     news = News.objects.all().filter(publish_date__gte=game.date).order_by('-publish_date')
     news_after = get_related_news_to_game(news, teams[0].team.name, teams[1].team.name)
 
+    first_team_players_in_game = []
+    second_team_players_in_game = []
+    for pg in game.footballplayerinfootballgame_set.all():
+        if pg.player.team == teams[0].team:
+            first_team_players_in_game.append(pg)
+        else:
+            second_team_players_in_game.append(pg)
+
     context = {
         'game': game,
         'first_team_details': first_team_details,
         'second_team_details': second_team_details,
         'teams': teams,
         'news_before': news_before,
-        'news_after': news_after
+        'news_after': news_after,
+        'first_team_players_in_game': first_team_players_in_game,
+        'second_team_players_in_game': second_team_players_in_game
 
     }
     return render(request, 'sport/football_game_detail.html', context)
 
 
+def football_leagues(request):
+    current_year = timezone.now().year
+    current_year = int(current_year)
+    current_leagues = FootballLeague.objects.filter(year__gte=current_year)
+    archive_leagues = FootballLeague.objects.filter(year__lt=current_year).order_by('-year')
+
+    context = {
+        'current_leagues': current_leagues,
+        'archive_leagues': archive_leagues
+    }
+    return render(request, 'sport/leagues.html', context)
+
+
+#  ---------------------------------------------------------------------------------------
 def get_details(events):
     total_G = 0
     total_PG = 0

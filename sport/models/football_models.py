@@ -37,9 +37,14 @@ class FootballTeam(Team):
     pass
 
 
+class FootballLeague(League):
+    # game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)
+    pass
+
+
 class FootballGame(Game):
     # teams = models.ManyToManyField(FootballTeam)
-    pass
+    league = models.ForeignKey(FootballLeague, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class FootballPlayer(Player):
@@ -61,10 +66,6 @@ class FootballEvent(Event):
 class FootballNonPlayer(Human):
     team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE)
     post = models.CharField(max_length=2, choices=FOOTBALL_NON_PLAYER_POST_CHOICES)
-
-
-class FootballLeague(League):
-    pass
 
 
 class FootballTeamInFootballGame(models.Model):

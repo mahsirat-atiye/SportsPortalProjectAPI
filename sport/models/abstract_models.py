@@ -27,6 +27,10 @@ class League(models.Model):
     class Meta:
         abstract = True
 
+    def __str__(self):
+        s = self.name + " " + str(self.year) + " - " + str(self.year+1)
+        return s
+
 
 class Team(models.Model):
     name = models.CharField(max_length=100)

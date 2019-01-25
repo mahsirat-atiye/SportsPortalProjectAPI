@@ -18,7 +18,8 @@ class News(models.Model):
         s = self.title
         return s
 
-
+    class Meta:
+        verbose_name_plural = "Pieces of news"
 # tags and resources and related teams and related players were handled by many to many relationship
 
 #     todo : images of non News
