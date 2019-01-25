@@ -161,6 +161,14 @@ def football_leagues(request):
     return render(request, 'sport/leagues.html', context)
 
 
+def league_detail(request, league_id):
+    league = get_object_or_404(FootballLeague, pk=league_id)
+    context = {
+        'league': league
+    }
+    return render(request, 'sport/football_league_detail.html', context)
+
+
 #  ---------------------------------------------------------------------------------------
 def get_details(events):
     total_G = 0
