@@ -6,7 +6,7 @@ from django.views import generic
 
 from sport.models import News, FootballTeam, FootballPlayer, FootballGame, FootballLeague
 from django.utils import timezone
-
+import logging
 
 #
 # class RecentGeneralNews(generic.ListView):
@@ -99,6 +99,8 @@ def football_player_detail_view(request, player_id):
             related_news = get_related_news_by_text(news, player.first_name, player.last_name)
     if request.POST and request.POST['part'] == 'follow':
         player.followers.add(request.user)
+        logger = logging.getLogger(__name__)
+        logger.info('با موفقیت از این بازیکن پیروی شد!')
     context = {
         'player': player,
         'related_news': related_news,
