@@ -48,7 +48,7 @@
     <ul>
         {% for rn in related_news %}
             <li>
-                <a href="{% url 'sport:news-detail' rn.id %}">
+                <a href="{% url 'sport:news-detail' news.id %}">
                     {{ rn.title }}
                 </a>
 
@@ -59,5 +59,29 @@
 {% else %}
     <p>خبر مرتبط ندارد!</p>
 {% endif %}
+{% if comments %}
+    <h1>کامنت ها</h1>
+    <ul>
+    {% for c in comments %}
+        <li>
+        <h3>{{ c.title }}</h3>
+            <h5>{{ c.writer.username }}</h5>
+        <p>{{ c.text }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>کامنتی وجود ندارد برای این خبر</p>
+{% endif %}
+
+<form action="{% url 'sport:news-detail' news.id %}" method="post" id="usrform">
+    {% csrf_token %}
+    <input type="submit" value="ارایه">
+    <input type="text" name="title" value="موضوع">
+</form>
+<br>
+<textarea rows="4" cols="50" name="comment" form="usrform">
+Enter text here...</textarea>
+
 </body>
 </html>
