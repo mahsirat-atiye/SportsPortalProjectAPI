@@ -159,8 +159,13 @@ def football_game_detail_view(request, game_id):
 def football_leagues(request):
     current_year = timezone.now().year
     current_year = int(current_year)
+
     current_leagues = FootballLeague.objects.filter(year__gte=current_year)
     archive_leagues = FootballLeague.objects.filter(year__lt=current_year).order_by('-year')
+
+    if request.POST:
+        current_leagues = filter_leagues_by_text(current_leagues, request.POST["part_of_league"])
+        archive_leagues = filter_leagues_by_text(archive_leagues, request.POST['part_of_league'])
 
     context = {
         'current_leagues': current_leagues,
@@ -310,3 +315,12 @@ def get_related_news_to_game(news, *team_names):
             related_news.add(n)
     related_news = list(related_news)
     return related_news
+
+
+def filter_leagues_by_text(leagues, special_text):
+    filtered_leagues = []
+    for l in leagues:
+        league_complete_name = str(l)
+        if league_complete_name.__contains__(special_text):
+            filtered_leagues.append(l)
+    return filtered_leagues
