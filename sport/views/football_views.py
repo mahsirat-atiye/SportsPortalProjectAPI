@@ -176,8 +176,21 @@ def football_leagues(request):
 
 def league_detail(request, league_id):
     league = get_object_or_404(FootballLeague, pk=league_id)
+
+    # for weeks:
+    games_separated_by_weeks = separate_by_week(league)
+
+    details_of_games_separated_by_weeks = []
+    for gw in games_separated_by_weeks:
+        details_of_games_of_current_week =[]
+        for g in gw:
+            details = get_details_of_game(g)
+            details_of_games_of_current_week.append(details)
+        details_of_games_separated_by_weeks.append(details_of_games_of_current_week)
+
     context = {
-        'league': league
+        'league': league,
+        'details_of_games_separated_by_weeks': details_of_games_separated_by_weeks
     }
     return render(request, 'sport/football_league_detail.html', context)
 
@@ -324,3 +337,57 @@ def filter_leagues_by_text(leagues, special_text):
         if league_complete_name.__contains__(special_text):
             filtered_leagues.append(l)
     return filtered_leagues
+
+
+def separate_by_week(league):
+    games = league.footballgame_set.order_by('-date')
+    last_game_date = games[0].date
+    first_game_date = games.last().date
+
+    # todo change it to persian # done ;))
+    last_game_weekday = last_game_date.weekday()
+    last_game_weekday += 2
+    last_game_weekday %= 7
+
+    last_interval = last_game_date - datetime.timedelta(days=last_game_weekday)
+    last_week_games = league.footballgame_set.filter(
+        date__gte=last_interval)
+    first_game_weekday = first_game_date.weekday()
+
+    first_game_weekday += 2
+    first_game_weekday %= 7
+
+    first_interval = first_game_date + datetime.timedelta(days=7 - first_game_weekday)
+    first_week_games = league.footballgame_set.filter(
+        date__lt=first_interval)
+
+    games_by_weeks = [first_week_games]
+    date = first_interval
+    while date < last_interval:
+        games_of_week = league.footballgame_set.filter(
+            date__lte=date + datetime.timedelta(days=7)).filter(date__gt=date)
+        games_by_weeks.append(games_of_week)
+        date = date + datetime.timedelta(days=7)
+
+    games_by_weeks.append(last_week_games)
+    return games_by_weeks
+
+
+def get_details_of_game(game):
+    teams = game.footballteaminfootballgame_set.all()
+    team = teams[0].team
+    events = get_events_by_game_and_team(game, team)
+    first_team_details = get_details(events)
+
+    team = teams[1].team
+
+    events = get_events_by_game_and_team(game, team)
+    second_team_details = get_details(events)
+
+    details = {
+        'game': game,
+        'teams': teams,
+        'first_team_details': first_team_details,
+        'second_team_details': second_team_details
+    }
+    return details
