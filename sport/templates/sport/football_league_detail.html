@@ -9,7 +9,7 @@
 <h1>{{ league.name }}{{ league.year }} - {{ league.year|add:1 }}</h1>
 {% for dgw in details_of_games_separated_by_weeks %}
 
-    <p>{{ forloop.counter }} هفته</p>
+    <h1>{{ forloop.counter }} هفته</h1>
     {% if dgw %}
         <ul>
             {% for dg in dgw %}
