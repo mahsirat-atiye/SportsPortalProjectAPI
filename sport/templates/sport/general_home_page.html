@@ -74,5 +74,122 @@
     <p>هنوز تیمی مورد علاقه ثبت نشده است!</p>
 {% endif %}
 
+{% if future_football_games %}
+    <h1>بازی های فوتبال اینده</h1>
+    <ul>
+    {% for g in future_football_games %}
+        <li>
+        <a href="{% url 'sport:football-game-detail' g.id %}">
+            بازی
+        </a>
+        {% for tg in g.footballteaminfootballgame_set.all %}
+                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                {% endfor %}
+        </li>
+    {% endfor %}
+    </ul>
+    بازی فوتبال اینده وجود ندارد
+{% endif %}
+
+{% if future_basketball_games %}
+    <h1>بازی های بسکتبال اینده</h1>
+    <ul>
+    {% for g in future_basketball_games %}
+        <li>
+        <a href="{% url 'sport:football-game-detail' g.id %}">
+            بازی
+        </a>
+        {% for tg in g.footballteaminfootballgame_set.all %}
+                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                {% endfor %}
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    بازی بسکتبال اینده وجود ندارد
+{% endif %}
+
+{% if football_games %}
+    <h1>بازی های فوتبال گذشته و حال</h1>
+    <ul>
+    {% for g in football_games %}
+        <li>
+        <a href="{% url 'sport:football-game-detail' g.id %}">
+            بازی
+        </a>
+        {% for tg in g.footballteaminfootballgame_set.all %}
+                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                {% endfor %}
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    بازی های فوتبال گذشته و حال وجود ندارد
+{% endif %}
+
+{% if basketball_games %}
+    <h1>بازی های بسکتبال حال و گذشته</h1>
+    <ul>
+    {% for g in basketball_games %}
+        <li>
+        <a href="{% url 'sport:football-game-detail' g.id %}">
+            بازی
+        </a>
+        {% for tg in g.footballteaminfootballgame_set.all %}
+                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                {% endfor %}
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    بازی بسکتبال حال و گذشته وجود ندارد
+{% endif %}
+
+{% if favorite_football_games %}
+    <h1>بازی های فوتبال مورد علاقه</h1>
+    <ul>
+    {% for g in favorite_football_games %}
+        <li>
+        <a href="{% url 'sport:football-game-detail' g.id %}">
+            بازی
+        </a>
+        {% for tg in g.footballteaminfootballgame_set.all %}
+                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                {% endfor %}
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    بازی فوتبال مورد علاقه وجود ندارد
+{% endif %}
+
+{% if favorite_basketball_games %}
+    <h1>بازی بسکتبال مورد علاقه</h1>
+    <ul>
+    {% for g in favorite_basketball_games %}
+        <li>
+        <a href="{% url 'sport:football-game-detail' g.id %}">
+            بازی
+        </a>
+        {% for tg in g.footballteaminfootballgame_set.all %}
+                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                {% endfor %}
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    بازی بسکتبال مورد علاقه وجود ندارد
+{% endif %}
+
+
+
+
 </body>
 </html>
+
+{#'future_football_games': future_football_games,#}
+{#        'future_basketball_games': future_basketball_games,#}
+{#        'football_games': football_games,#}
+{#        'basketball_games': basketball_games,#}
+{#        'favorite_football_games': favorite_football_games,#}
+{#        'favorite_basketball_games': favorite_basketball_games#}

@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
-from sport.models import News, FootballTeam, FootballPlayer, FootballGame, FootballLeague
+from sport.models import News, FootballTeam, FootballPlayer, FootballGame, FootballLeague, BasketballGame
 from django.utils import timezone
 import logging
 
@@ -23,7 +23,8 @@ def recent_general_news(request):
     news = News.objects.filter(publish_date__lte=timezone.now()).filter(
         publish_date__gte=timezone.now() - datetime.timedelta(days=2)).order_by('-publish_date')
 
-    teams = request.user.footballteam_set.all()
+    teams = request.user.footballteam_set.all()  # for debug
+
     f1_ = request.user.footballteam_set.all()
     f2_ = request.user.footballplayer_set.all()
     f3_ = request.user.basketballteam_set.all()
@@ -38,7 +39,24 @@ def recent_general_news(request):
     favorites.extend(f3)
     favorites.extend(f4)
 
+    # games:
+    future_football_games = FootballGame.objects.filter(date__gt=timezone.now()).order_by('-date')[:10]
+    future_basketball_games = BasketballGame.objects.filter(date__gt=timezone.now()).order_by('-date')[:10]
+
+    football_games = FootballGame.objects.filter(date__lte=timezone.now()).order_by('-date')[:10]
+    basketball_games = BasketballGame.objects.filter(date__lte=timezone.now()).order_by('-date')[:10]
+
+    favorite_football_games = FootballGame.objects.filter(
+        date__gt=timezone.now() - datetime.timedelta(days=1)).filter(
+        date__lte=timezone.now() + datetime.timedelta(days=1)).order_by('-date')[:10]
+
+    favorite_basketball_games = BasketballGame.objects.filter(
+        date__gt=timezone.now() - datetime.timedelta(days=1)).filter(
+        date__lte=timezone.now() + datetime.timedelta(days=1)).order_by('-date')[:10]
+
+    # news
     favorite_news = get_related_news_by_all_criteria(news, *favorites)
+
     if request.POST:
         n = int(request.POST['number'])
         recent_news = News.objects.filter(publish_date__lte=timezone.now()).order_by('-publish_date')[:n]
@@ -48,7 +66,14 @@ def recent_general_news(request):
     context = {
         'recent_news': recent_news,
         'favorite_news': favorite_news,
-        'teams': teams
+        'teams': teams,
+        'future_football_games': future_football_games,
+        'future_basketball_games': future_basketball_games,
+        'football_games': football_games,
+        'basketball_games': basketball_games,
+        'favorite_football_games': favorite_football_games,
+        'favorite_basketball_games': favorite_basketball_games
+
     }
     return render(request, 'sport/general_home_page.html', context)
 
