@@ -23,7 +23,8 @@ BASKETBALL_NON_PLAYER_POST_CHOICES = (
 
 
 class BasketballTeam(Team):
-    pass
+    followers = models.ManyToManyField(User)
+
 
 
 class BasketballLeague(League):

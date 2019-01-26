@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
@@ -11,7 +12,7 @@ import logging
 
 #
 # class RecentGeneralNews(generic.ListView):
-#     template_name = 'sport/recent_general_news.html'
+#     template_name = 'sport/general_home_page.html'
 #     context_object_name = 'recent_news'
 #
 #     def get_queryset(self):
@@ -19,6 +20,25 @@ import logging
 
 
 def recent_general_news(request):
+    news = News.objects.filter(publish_date__lte=timezone.now()).filter(
+        publish_date__gte=timezone.now() - datetime.timedelta(days=2)).order_by('-publish_date')
+
+    teams = request.user.footballteam_set.all()
+    f1_ = request.user.footballteam_set.all()
+    f2_ = request.user.footballplayer_set.all()
+    f3_ = request.user.basketballteam_set.all()
+    f4_ = request.user.basketballplayer_set.all()
+    f1 = map(lambda x: x.name, f1_)
+    f2 = map(lambda x: str(x), f2_)
+    f3 = map(lambda x: str(x), f3_)
+    f4 = map(lambda x: str(x), f4_)
+    favorites = []
+    favorites.extend(f1)
+    favorites.extend(f2)
+    favorites.extend(f3)
+    favorites.extend(f4)
+
+    favorite_news = get_related_news_by_all_criteria(news, *favorites)
     if request.POST:
         n = int(request.POST['number'])
         recent_news = News.objects.filter(publish_date__lte=timezone.now()).order_by('-publish_date')[:n]
@@ -26,9 +46,11 @@ def recent_general_news(request):
         recent_news = News.objects.filter(publish_date__lte=timezone.now()).order_by('-publish_date')[:10]
 
     context = {
-        'recent_news': recent_news
+        'recent_news': recent_news,
+        'favorite_news': favorite_news,
+        'teams': teams
     }
-    return render(request, 'sport/recent_general_news.html', context)
+    return render(request, 'sport/general_home_page.html', context)
 
 
 def football_teams(request):
@@ -110,6 +132,7 @@ def football_player_detail_view(request, player_id):
         'player': player,
         'related_news': related_news,
         'details': details
+
     }
     # context.update(details)
 
@@ -182,7 +205,7 @@ def league_detail(request, league_id):
 
     details_of_games_separated_by_weeks = []
     for gw in games_separated_by_weeks:
-        details_of_games_of_current_week =[]
+        details_of_games_of_current_week = []
         for g in gw:
             details = get_details_of_game(g)
             details_of_games_of_current_week.append(details)

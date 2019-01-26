@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recent General News</title>
+</head>
+<body>
+{% if recent_news %}
+<h1>اخرین اخبار</h1>
+    <ul>
+        {% for n in recent_news %}
+            <li>
+
+                                <a href="{% url 'sport:news-detail' n.id %}">
+                                    {{ n.title }}
+                                </a>
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>
+        No news yet!
+    </p>
+{% endif %}
+
+<form action="{% url 'sport:general-home' %}" method="post">
+    {% csrf_token %}
+    تعداد اخباری که می خواهید مشاهده کنید را وارد کنید
+    <br>
+    <input type="number" name="number" value="10">
+    <br>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+
+
+{% if favorite_news %}
+<h1>اخرین اخبار مورد علاقه</h1>
+    <ul>
+        {% for n in favorite_news %}
+            <li>
+
+                                <a href="{% url 'sport:news-detail' n.id %}">
+                                    {{ n.title }}
+                                </a>
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>
+        اخبار مورد علاقه ای در دیروز و امروز وجود وجود ندارد!
+    </p>
+{% endif %}
+
+<h1>to debug</h1>
+{% if teams %}
+    <h1>تیم های مورد علاقه</h1>
+    <ul>
+        {% for t in teams %}
+            <li>
+
+                                <a href="{% url 'sport:football-team-detail' t.id %}">
+                                    {{ t.name }}
+                                </a>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>هنوز تیمی مورد علاقه ثبت نشده است!</p>
+{% endif %}
+
+</body>
+</html>

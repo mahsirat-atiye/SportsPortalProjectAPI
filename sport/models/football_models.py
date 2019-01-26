@@ -34,7 +34,7 @@ TEAM_SITUATION_IN_GAME = (
 
 
 class FootballTeam(Team):
-    pass
+    followers = models.ManyToManyField(User)
 
 
 class FootballLeague(League):
