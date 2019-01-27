@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %} ورود {% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="center-block rounded"
+             style="width:50vw;display:table;padding: 10px;margin: 10vh auto;background-color:#edffe1;">
+            <h2>ورود</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% if captcha %}
+                    <img src="data:image/jpg; base64, {{ captcha }}">
+                {% endif %}
+                <button class="btn btn-success" type="submit">ورود</button>
+            </form>
+            <br>
+        </div>
+    </div>
+{% endblock %}

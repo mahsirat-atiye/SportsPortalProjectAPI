@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %} ثبت نام {% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="center-block rounded" style="width:50vw;display:table;padding: 10px;margin: 10vh auto;background-color:#edffe1;">
+            <h2>ثبت نام</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">ثبت نام</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
