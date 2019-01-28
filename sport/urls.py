@@ -28,7 +28,7 @@ urlpatterns = [
     path('<int:team_id>/basketball/team-detail', basketball_team_detail_view, name='basketball-team-detail'),
     path('<int:player_id>/basketball/player-detail', basketball_player_detail_view, name='basketball-player-detail'),
     path('<int:game_id>/basketball/game-detail', basketball_game_detail_view, name='basketball-game-detail'),
-    path('basketball/leagues', basketball_leagues, name='football_leagues'),
+    path('basketball/leagues', basketball_leagues, name='basketball_leagues'),
     path('<int:league_id>/basketball/league_detail', basketball_league_detail, name='league_detail_basketball'),
 
 ]
