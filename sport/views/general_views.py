@@ -7,7 +7,7 @@ from django.utils import timezone
 
 
 class NewsDetailView(generic.DetailView):
-    template_name = 'sport/news_detail.html'
+    template_name = 'sport/general/news_detail.html'
     context_object_name = 'news'
     model = News
 
@@ -31,7 +31,7 @@ def news_detail_view(request, news_id):
         related_news.remove(news)
     comments = news.comment_set.all()
 
-    return render(request, 'sport/news_detail.html', {
+    return render(request, 'sport/general/news_detail.html', {
         'news': news,
         'related_news': related_news,
         "comments": comments
@@ -115,7 +115,7 @@ def recent_general_news_games(request):
         'favorite_basketball_games': favorite_basketball_games
 
     }
-    return render(request, 'sport/general_home_page.html', context)
+    return render(request, 'sport/general/general_home_page.html', context)
 
 
 #  ---------------------------------------------------------------------------------------

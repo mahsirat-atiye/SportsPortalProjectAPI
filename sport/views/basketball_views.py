@@ -11,7 +11,7 @@ def basketball_teams(request):
     context = {
         'teams': teams
     }
-    return render(request, 'sport/teams.html', context)
+    return render(request, 'sport/football/football_teams.html', context)
 
 
 def basketball_team_detail_view(request, team_id):
@@ -88,7 +88,7 @@ def basketball_player_detail_view(request, player_id):
     }
     # context.update(details)
 
-    return render(request, 'sport/football_player_detail.html', context)
+    return render(request, 'sport/football/football_player_detail.html', context)
 
 
 def basketball_game_detail_view(request, game_id):
@@ -128,7 +128,7 @@ def basketball_game_detail_view(request, game_id):
         'second_team_players_in_game': second_team_players_in_game
 
     }
-    return render(request, 'sport/football_game_detail.html', context)
+    return render(request, 'sport/football/football_game_detail.html', context)
 
 
 def basketball_leagues(request):
@@ -146,7 +146,7 @@ def basketball_leagues(request):
         'current_leagues': current_leagues,
         'archive_leagues': archive_leagues
     }
-    return render(request, 'sport/leagues.html', context)
+    return render(request, 'sport/football/football_leagues.html', context)
 
 
 def basketball_league_detail(request, league_id):
@@ -167,7 +167,7 @@ def basketball_league_detail(request, league_id):
         'league': league,
         'details_of_games_separated_by_weeks': details_of_games_separated_by_weeks
     }
-    return render(request, 'sport/football_league_detail.html', context)
+    return render(request, 'sport/football/football_league_detail.html', context)
 
 
 # -------------------------------------------------------------------------------------
