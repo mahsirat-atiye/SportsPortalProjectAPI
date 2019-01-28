@@ -48,7 +48,7 @@ def football_team_detail_view(request, team_id):
         'games': games
     }
 
-    return render(request, 'sport/team_detail.html', context)
+    return render(request, 'sport/football/football_team_detail.html', context)
 
 
 def football_player_detail_view(request, player_id):

@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% block title %} جزئیات تیم {% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Football Team Detail</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        #myInput {
+            background-image: url('../Desert.jpg');
+            background-position: 10px 12px;
+            background-repeat: no-repeat;
+            width: 100%;
+            font-size: 16px;
+            padding: 12px 20px 12px 40px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+
+        #myUL {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #myUL li a {
+            border: 1px solid #ddd;
+            margin-top: -1px; /* Prevent double borders */
+            background-color: #f6f6f6;
+            padding: 12px;
+            text-decoration: none;
+            font-size: 18px;
+            color: black;
+            display: block
+        }
+
+        #myUL li a:hover:not(.header) {
+            background-color: #eee;
+        }
+    </style>
+
+    <script>
+        function myFunction() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("myUL");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+
+</head>
+<body>
+<h1>{{ team.name }}</h1>
+
+<form action="{% url 'sport:football-team-detail' team.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="part" value="filter_news">
+    <p>
+        <input type="radio" name="choice" value="tag" id="choice 1">
+        <label for="choice 1">براساس تگ</label>
+    </p>
+    <p>
+        <input type="radio" name="choice" value="title" id="choice 2">
+        <label for="choice 2">براساس عنوان</label>
+    </p>
+    <p>
+        <input type="radio" name="choice" value="text" id="choice 3">
+        <label for="choice 3">براساس متن</label>
+    </p>
+
+    <input type="submit" value="فیلتر">
+</form>
+
+
+{% if related_news %}
+    <h1>اخبار مرتبط</h1>
+    <ul>
+        {% for n in related_news %}
+            <li>
+
+                <a href="{% url 'sport:news-detail' n.id %}">
+                    {{ n.title }}
+                </a>
+                <p>{{ n.text }}</p>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>اخباری مرتبط با این تیم وجود ندارد</p>
+{% endif %}
+
+
+
+{#team.footballplayer_set#}
+
+{% if team.footballplayer_set.all %}
+    <h1>بازیکنان</h1>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+    <ul id="myUL">
+        {% for p in team.footballplayer_set.all %}
+            <li>
+                <a href="{% url 'sport:football-player-detail' p.id %}">
+                    {{ p.first_name }} {{ p.last_name }}
+                </a>
+
+
+                {#                 todo posts must get better#}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>بازیکنی برای این تیم وجود ندارد</p>
+{% endif %}
+
+
+{% if team.footballnonplayer_set.all %}
+    <h1>غیر بازیکنان</h1>
+    <ul>
+        {% for np in team.footballnonplayer_set.all %}
+            <li>
+                <p>
+                    {{ np.first_name }} {{ np.last_name }}
+                </p>
+
+
+                {#                 todo posts must get better#}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p> غیر بازیکنی برای این تیم وجود ندارد</p>
+{% endif %}
+
+
+
+
+{% if games %}
+    <h1>بازی ها</h1>
+    <form action="{% url 'sport:football-team-detail' team.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="part" value="winning_losing">
+        <p><label>براساس برد باخت مساوی</label>
+            <input type="radio" name="choice" value="AW" id="choice 11">
+            <label for="choice 11">برد</label>
+        </p>
+        <p><label>براساس برد باخت مساوی</label>
+            <input type="radio" name="choice" value="CL" id="choice 12">
+            <label for="choice 12">باخت</label>
+        </p>
+        <p><label>براساس برد باخت مساوی</label>
+            <input type="radio" name="choice" value="BE" id="choice 13">
+            <label for="choice 13">مساوی</label>
+        </p>
+
+
+        <input type="submit" value="فیلتر">
+    </form>
+    <form action="{% url 'sport:football-team-detail' team.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="part" value="opponent_team">
+        <input type="text" name="opponent_team" value="" id="choice 14">
+        <label for="choice 14">براساس تیم حریف</label>
+        <input type="submit" value="فیلتر">
+    </form>
+
+    <ul>
+        {% for g in games %}
+            <li>
+                <a href="{% url 'sport:football-game-detail' g.id %}">
+                    بازی
+                </a>
+                {% for tg in g.footballteaminfootballgame_set.all %}
+                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                {% endfor %}
+                {#                    todo : games must have better appeatrence#}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>بازی برای این تیم وجود ندارد</p>
+{% endif %}
+
+<form action="{% url 'sport:football-team-detail' team.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="part" value="follow">
+
+    <input type="submit" value="فالو">
+</form>
+
+</body>
+{% endblock %}
