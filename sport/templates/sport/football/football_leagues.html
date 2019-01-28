@@ -19,7 +19,7 @@
     <ul>
     {% for l in current_leagues %}
         <li>
-        <a href="{% url 'sport:league_detail' l.id %}">{{ l.name }}{{ l.year }} - {{ l.year|add:1}}</a>
+        <a href="{% url 'sport:league_detail_football' l.id %}">{{ l.name }}{{ l.year }} - {{ l.year|add:1}}</a>
         </li>
     {% endfor %}
     </ul>
@@ -32,7 +32,7 @@
     <ul>
     {% for l in archive_leagues %}
         <li>
-        <a href="{% url 'sport:league_detail' l.id %}">{{ l.name }}{{ l.year }} - {{ l.year|add:1 }}</a>
+        <a href="{% url 'sport:league_detail_football' l.id %}">{{ l.name }}{{ l.year }} - {{ l.year|add:1 }}</a>
         </li>
     {% endfor %}
     </ul>

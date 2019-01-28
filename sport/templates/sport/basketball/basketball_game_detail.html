@@ -1,12 +1,134 @@
 {% extends 'base.html' %}
 {% block title %} جزئیات بازی بسکتبال {% endblock %}
 
+
 {% block content %}
 <head>
     <meta charset="UTF-8">
-    <title>Basketball Game Detail</title>
+    <title>basketball Game Detail</title>
 </head>
 <body>
+{% load custom_tags %}
+<h1>
+    {{ game.date }}بازی</h1>
+{% for t in teams %}
+    <h2>
+        {{ t.team.name }} {{ t.team_score }} {{ t.property_percent }}
+        {% if  t.best_player %}
+            {{ t.best_player }}
+        {% endif %}
+    </h2>
+{% endfor %}
+<h1>آمار مربوط به تیم اول</h1>
+
+<p>{{ first_team_details|get_item:"total_2PT" }}تعداد گل </p>
+<p>{{ first_team_details|get_item:"total_3PT" }}تعداد پاس گل </p>
+
+<p>{{ first_team_details|get_item:"total_R" }}تعداد کارت قرمز </p>
+<p>{{ first_team_details|get_item:"total_E" }} تعداد خطا </p>
+
+<h1>آمار مربوط به تیم دوم</h1>
+
+<p>{{ second_team_details|get_item:"total_2PT" }}تعداد گل </p>
+<p>{{ second_team_details|get_item:"total_3PT" }}تعداد پاس گل </p>
+
+<p>{{ second_team_details|get_item:"total_R" }}تعداد کارت قرمز </p>
+<p>{{ second_team_details|get_item:"total_E" }} تعداد خطا </p>
+
+
+<h1>خط زمانی</h1>
+{% for e in game.basketballevent_set.all %}
+    <p>{{ e.exact_time }} {{ e.doer.first_name }} {{ e.doer.last_name }} {{ e.get_event_type_display }}</p>
+{% endfor %}
+{% if game.report %}
+    <h1>
+        گزارش لحظه به لحظه
+    </h1>
+    <p>
+        {{ game.report }}
+    </p>
+{% else %}
+{% endif %}
+{% if game.basketballimage_set.all %}
+    <h1>تصاویر مرتبط با بازی</h1>
+    {% for i in game.basketballimage_set.all %}
+        <img src="{{ i.image.url }}" alt="image of game acn not be loaded">
+        <p>{{ i.image.url }}</p>
+        <p>{{ i.caption }}</p>
+    {% endfor %}
+    {% else %}
+    <p>تصویری مرتبط با این بازی وجود ندارد</p>
+{% endif %}
+
+{% if game.basketballvideo_set.all %}
+    <h1>فیلم های مرتبط با ابین  بازی </h1>
+    {% for v in game.basketballvideo_set.all %}
+        <video width="400" controls>
+        <source src="{{ v.url }}">
+        </video>
+        <p>{{ v.url }}</p>
+        <p>{{ v.caption }}</p>
+    {% endfor %}
+    {% else %}
+    <p>فیلمی مرتبط با این بازی وجود ندارد!</p>
+{% endif %}
+
+
+{% if news_before %}
+    <h1> قبل از بازی اخبار مرتبط</h1>
+    <ul>
+        {% for n in news_before %}
+            <li>
+
+                <a href="{% url 'sport:news-detail' n.id %}">
+                    {{ n.title }}
+                </a>
+                <p>{{ n.text }}</p>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>اخباری مرتبط قبلی با این بازی وجود ندارد</p>
+{% endif %}
+
+{% if news_after %}
+    <h1>اخبار مرتبط حین یا بعد از بازی</h1>
+    <ul>
+        {% for n in news_after %}
+            <li>
+
+                <a href="{% url 'sport:news-detail' n.id %}">
+                    {{ n.title }}
+                </a>
+                <p>{{ n.text }}</p>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>اخباری مرتبط حین یا بعد با این بازی وجود ندارد</p>
+{% endif %}
 
 </body>
+{% if first_team_players_in_game %}
+    <h1>اعضای تیم اول</h1>
+    {% for pg in first_team_players_in_game %}
+        {{ pg.player.first_name }} {{ pg.player.last_name }} {{ pg.main_player }} {{ pg.time_of_change }}
+    {% endfor %}
+    {% else %}
+    <p>اعضای تیم اول در این بازی مشخص نشده اند</p>
+{% endif %}
+
+{% if second_team_players_in_game %}
+    <h1>اعضای تیم دوم</h1>
+    {% for pg in second_team_players_in_game %}
+        {{ pg.player.first_name }} {{ pg.player.last_name }} {{ pg.main_player }} {{ pg.time_of_change }}
+    {% endfor %}
+    {% else %}
+    <p>اعضای تیم دوم در این بازی مشخص نشدخ اند.</p>
+{% endif %}
 {% endblock %}
+ock %}

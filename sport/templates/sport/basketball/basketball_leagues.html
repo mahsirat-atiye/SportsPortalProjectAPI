@@ -1,12 +1,45 @@
 {% extends 'base.html' %}
 {% block title %} لیگ ها {% endblock %}
 
+
 {% block content %}
 <head>
     <meta charset="UTF-8">
     <title>Leagues</title>
 </head>
 <body>
+
+<form action="{% url 'sport:basketball_leagues' %}" method="post">
+        {% csrf_token %}
+       <input type="text" name="part_of_league" value="" id="1">
+        <label for="1">براساس بخشی از نام لیگ</label>
+        <input type="submit" value="فیلتر">
+</form>
+{% if current_leagues %}
+    <h1>لیگ های جاری</h1>
+    <ul>
+    {% for l in current_leagues %}
+        <li>
+        <a href="{% url 'sport:league_detail_basketball' l.id %}">{{ l.name }}{{ l.year }} - {{ l.year|add:1}}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>هیچ لیگ جاری وجود ندارد! </p>
+{% endif %}
+
+{% if archive_leagues %}
+    <h1>لیگ های آرشیو</h1>
+    <ul>
+    {% for l in archive_leagues %}
+        <li>
+        <a href="{% url 'sport:league_detail_basketball' l.id %}">{{ l.name }}{{ l.year }} - {{ l.year|add:1 }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>هیچ لیگ آرشیو وجود ندارد</p>
+{% endif %}
 
 </body>
 {% endblock %}

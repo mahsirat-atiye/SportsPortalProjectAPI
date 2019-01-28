@@ -1,12 +1,90 @@
 {% extends 'base.html' %}
 {% block title %} جزئیات بازیکن بسکتبال {% endblock %}
 
+
 {% block content %}
 <head>
     <meta charset="UTF-8">
-    <title>Basketball Player Detail</title>
+    <title>basketball Player Detail</title>
 </head>
 <body>
+{% load custom_tags %}
+
+
+<h1>{{ player.first_name }} {{ player.last_name }}</h1>
+<img src="{{ player.image.url }}" alt="image of player can not be loaded">
+
+<h2>اطلاعات</h2>
+<p>{{ player.height }} قد:</p>
+<p>{{ player.weight }}وزن: </p>
+<p>{{ player.birth_day }} تاریخ تولد: </p>
+<h1>آمار</h1>
+
+<p>{{ details|get_item:"total_G" }}تعداد گل </p>
+<p>{{ details|get_item:"total_PG" }}تعداد پاس گل </p>
+<p>{{ details|get_item:"total_YC" }}تعداد کارت زرد </p>
+<p>{{ details|get_item:"total_RC" }}تعداد کارت قرمز </p>
+<p>{{ details|get_item:"total_E" }} تعداد خطا </p>
+<p>{{ details|get_item:"total_P" }}تعداد پنالتی </p>
+<p>{{ details|get_item:"total_CH" }}تعداد تعویض </p>
+<p>{{ details|get_item:"total_CO" }}تعداد کرنر </p>
+<p>{{ details|get_item:"total_SG" }}تعداد موقعیت گل </p>
+
+<form action="{% url 'sport:basketball-player-detail' player.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="part" value="for_season">
+    لطفا فصلی که می خواهید آمار مربوط به آن را مشاهده کنید را وارد کنید
+    <br>
+    <input type="number" name="season" value="2019">
+    <br>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<form action="{% url 'sport:basketball-player-detail' player.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="part" value="filter_news">
+    <p>
+        <input type="radio" name="choice" value="tag" id="choice 1">
+        <label for="choice 1">براساس تگ</label>
+    </p>
+    <p>
+        <input type="radio" name="choice" value="title" id="choice 2">
+        <label for="choice 2">براساس عنوان</label>
+    </p>
+    <p>
+        <input type="radio" name="choice" value="text" id="choice 3">
+        <label for="choice 3">براساس متن</label>
+    </p>
+
+    <input type="submit" value="فیلتر">
+</form>
+
+{% if related_news %}
+    <h1>اخبار مرتبط</h1>
+    <ul>
+        {% for n in related_news %}
+            <li>
+
+                <a href="{% url 'sport:news-detail' n.id %}">
+                    {{ n.title }}
+                </a>
+                <p>{{ n.text }}</p>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>اخباری مرتبط با این بازیکن وجود ندارد</p>
+{% endif %}
+
+<form action="{% url 'sport:basketball-player-detail' player.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="part" value="follow">
+
+    <input type="submit" value="فالو">
+</form>
 
 </body>
 {% endblock %}

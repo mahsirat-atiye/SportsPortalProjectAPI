@@ -195,10 +195,10 @@ def get_details_basketball(events):
         elif e.event_type == 'R':
             total_R += 1
 
-    return {'total_G': total_2PT,
-            'total_PG': total_3PT,
-            'total_YC': total_E,
-            'total_RC': total_R,
+    return {'total_2PT': total_2PT,
+            'total_3PT': total_3PT,
+            'total_E': total_E,
+            'total_R': total_R,
             }
 
 

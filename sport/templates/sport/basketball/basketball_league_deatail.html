@@ -1,12 +1,61 @@
 {% extends 'base.html' %}
 {% block title %} جزئیات لیگ بسکتبال {% endblock %}
 
+
 {% block content %}
 <head>
     <meta charset="UTF-8">
-    <title>Basketball League Detail</title>
+    <title>basketball league detail</title>
 </head>
 <body>
+{% load custom_tags %}
+<h1>{{ league.name }}{{ league.year }} - {{ league.year|add:1 }}</h1>
+{% for dgw in details_of_games_separated_by_weeks %}
+
+    <h1>{{ forloop.counter }} هفته</h1>
+    {% if dgw %}
+        <ul>
+            {% for dg in dgw %}
+                {% for key, value in dg.items %}
+                    {% ifequal key "game" %}
+                        <h1>game</h1>
+                        <h1>{{ value.date }}</h1>
+                    {% endifequal %}
+                    {% ifequal key "teams" %}
+                        {% for t in value %}
+                            <h4>
+                                {{ t.team.name }}  نام
+                                {{ t.team_score }}   امتیاز
+                                {{ t.property_percent }}  درصدمالکیت
+                                {% if  t.best_player %}
+                                    {{ t.best_player }}  بهترین بازیکن
+                                {% endif %}
+                            </h4>
+                        {% endfor %}
+                    {% endifequal %}
+                {% endfor %}
+                <h3>تیم اول</h3>
+                <p>{{ dg|get_item:"first_team_details"|get_item:"total_2PT" }}تعداد پرتاب دو امتیازی </p>
+                <p>{{ dg|get_item:"first_team_details"|get_item:"total_3PT" }}تعدادپرتاب سه امتیازی </p>
+
+                <p>{{ dg|get_item:"first_team_details"|get_item:"total_R" }}تعداد ریابندها </p>
+                <p>{{ dg|get_item:"first_team_details"|get_item:"total_E" }} تعداد خطا </p>
+
+
+                <h3>تیم دوم</h3>
+                <p>{{ dg|get_item:"second_team_details"|get_item:"total_2PT" }}تعداد دو امتنیازی </p>
+                <p>{{ dg|get_item:"second_team_details"|get_item:"total_3PT" }}تعداد پرتاب سه امتیازی </p>
+
+                <p>{{ dg|get_item:"second_team_details"|get_item:"total_R" }}تعداد ریباندها </p>
+                <p>{{ dg|get_item:"second_team_details"|get_item:"total_E" }} تعداد خطا </p>
+
+            {% endfor %}
+
+        </ul>
+    {% else %}
+        بازی در این هفته وجود ندارد
+    {% endif %}
+{% endfor %}
 
 </body>
 {% endblock %}
