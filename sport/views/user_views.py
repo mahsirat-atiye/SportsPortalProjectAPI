@@ -27,6 +27,7 @@ def signup(request):
 
 def login(request):
     if request.user.is_authenticated:
+        dj_auth.logout(request)
         return HttpResponseRedirect('/')
     elif request.method == "POST":
         f = LoginForm(data=request.POST)

@@ -9,6 +9,7 @@ urlpatterns = [
 
     path('', recent_general_news_games, name='home'),
     path('<int:news_id>/news-detail', news_detail_view, name='news-detail'),
+
     path('accounts/', include('django.contrib.auth.urls')),  # new
     path('accounts/signup/', signup, name='signup'),
     path('accounts/login/', login, name='login'),

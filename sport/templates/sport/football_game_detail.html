@@ -1,5 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% block title %} جزئیات بازی فوتبال {% endblock %}
+
+{% block content %}
 <head>
     <meta charset="UTF-8">
     <title>Football Game Detail</title>
@@ -134,4 +136,4 @@
     {% else %}
     <p>اعضای تیم دوم در این بازی مشخص نشدخ اند.</p>
 {% endif %}
-</html>
+{% endblock %}
