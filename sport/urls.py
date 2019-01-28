@@ -1,5 +1,8 @@
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 
+from react_django import settings
 from sport.views import *
 from . import views
 
@@ -33,3 +36,5 @@ urlpatterns = [
     path('<int:league_id>/basketball/league_detail', basketball_league_detail, name='league_detail_basketball'),
 
 ]
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
