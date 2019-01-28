@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from sport.models.abstract_models import Game, Human, Event, Player, Team, League
+from sport.models.football_models import TEAM_SITUATION_IN_GAME
+from sport.models.abstract_models import Game, Human, Event, Player, Team, League, Image, Video
 
 BASKETBALL_PLAYER_EVENT_CHOICES = (
     ('2PT', 'پرتاب دو امتیازی'),
@@ -11,9 +12,11 @@ BASKETBALL_PLAYER_EVENT_CHOICES = (
 )
 
 BASKETBALL_POST_CHOICES = (
-    ('RB', 'بسکتبالیست چپ'),
-    ('LB', 'بسکتبالیست راست'),
-    ('MB', 'بسکتبالیست اصلی'),
+    ('G', 'گارد'),
+    ('C', 'مرکز'),
+    ('GF', 'گارد فوروارد'),
+    ('FG', 'فوروارد گارد'),
+    ('FC', 'فوروارد سنتر'),
 )
 
 BASKETBALL_NON_PLAYER_POST_CHOICES = (
@@ -23,8 +26,7 @@ BASKETBALL_NON_PLAYER_POST_CHOICES = (
 
 
 class BasketballTeam(Team):
-    followers = models.ManyToManyField(User)
-
+    followers = models.ManyToManyField(User, blank=True, null=True)
 
 
 class BasketballLeague(League):
@@ -32,7 +34,7 @@ class BasketballLeague(League):
 
 
 class BasketballGame(Game):
-    teams = models.ManyToManyField(BasketballTeam)
+    league = models.ForeignKey(BasketballLeague, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class BasketballPlayer(Player):
@@ -45,7 +47,46 @@ class BasketballEvent(Event):
     event_type = models.CharField(max_length=3, choices=BASKETBALL_PLAYER_EVENT_CHOICES)
     doer = models.ForeignKey(BasketballPlayer, on_delete=models.CASCADE)  # ?
 
+    def __str__(self):
+        s = self.doer.first_name + " " + self.doer.last_name + " در بازی " + str(
+            self.game.date) + "انجام داد" + self.event_type
+        return s
+
 
 class BasketballNonPlayer(Human):
     team = models.ForeignKey(BasketballTeam, on_delete=models.CASCADE)
     post = models.CharField(max_length=2, choices=BASKETBALL_NON_PLAYER_POST_CHOICES)
+
+
+class BasketballTeamInBasketballGame(models.Model):
+    game = models.ForeignKey(BasketballGame, on_delete=models.CASCADE)
+    team = models.ForeignKey(BasketballTeam, on_delete=models.CASCADE)
+    team_score = models.IntegerField(blank=True, null=True)
+    property_percent = models.IntegerField(blank=True, null=True)
+    situation = models.CharField(max_length=3, choices=TEAM_SITUATION_IN_GAME, blank=True, null=True)
+    best_player = models.ForeignKey(BasketballPlayer, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        s = self.team.name + " در بازی " + str(self.game.date)
+        return s
+
+
+class BasketballPlayerInBasketballGame(models.Model):
+    game = models.ForeignKey(BasketballGame, on_delete=models.CASCADE)
+    player = models.ForeignKey(BasketballPlayer, on_delete=models.CASCADE)
+    main_player = models.BooleanField(blank=True, null=True)
+    time_of_change = models.TimeField(blank=True, null=True)
+
+    def __str__(self):
+        s = self.player.first_name + "  " + self.player.last_name
+        " در بازی " + str(self.game.date)
+        return s
+
+
+class BasketballImage(Image):
+    game = models.ForeignKey(BasketballGame, on_delete=models.CASCADE, blank=True, null=True)
+    team = models.ForeignKey(BasketballTeam, on_delete=models.CASCADE, blank=True, null=True)
+
+
+class BasketballVideo(Video):
+    game = models.ForeignKey(BasketballGame, on_delete=models.CASCADE, blank=True, null=True)

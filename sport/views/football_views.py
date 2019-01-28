@@ -48,7 +48,7 @@ def football_team_detail_view(request, team_id):
         'games': games
     }
 
-    return render(request, 'sport/football_team_detail.html', context)
+    return render(request, 'sport/team_detail.html', context)
 
 
 def football_player_detail_view(request, player_id):
@@ -149,7 +149,7 @@ def football_leagues(request):
     return render(request, 'sport/leagues.html', context)
 
 
-def league_detail(request, league_id):
+def football_league_detail(request, league_id):
     league = get_object_or_404(FootballLeague, pk=league_id)
 
     # for weeks:
@@ -159,7 +159,7 @@ def league_detail(request, league_id):
     for gw in games_separated_by_weeks:
         details_of_games_of_current_week = []
         for g in gw:
-            details = get_details_of_game(g)
+            details = get_details_of_game_football(g)
             details_of_games_of_current_week.append(details)
         details_of_games_separated_by_weeks.append(details_of_games_of_current_week)
 
@@ -168,3 +168,65 @@ def league_detail(request, league_id):
         'details_of_games_separated_by_weeks': details_of_games_separated_by_weeks
     }
     return render(request, 'sport/football_league_detail.html', context)
+
+
+# -------------------------------------------------------------------------------------
+def get_details_football(events):
+    total_G = 0
+    total_PG = 0
+    total_YC = 0
+    total_RC = 0
+    total_E = 0
+    total_P = 0
+    total_CH = 0
+    total_CO = 0
+    total_SG = 0
+
+    for e in events:
+        if e.event_type == 'G':
+            total_G += 1
+        elif e.event_type == 'PG':
+            total_PG += 1
+        elif e.event_type == 'YC':
+            total_YC += 1
+        elif e.event_type == 'RC':
+            total_RC += 1
+        elif e.event_type == 'E':
+            total_E += 1
+        elif e.event_type == 'P':
+            total_P += 1
+        elif e.event_type == 'CH':
+            total_CH += 1
+        elif e.event_type == 'CO':
+            total_CO += 1
+        elif e.event_type == 'SG':
+            total_SG += 1
+    return {'total_G': total_G,
+            'total_PG': total_PG,
+            'total_YC': total_YC,
+            'total_RC': total_RC,
+            'total_E': total_E,
+            'total_P': total_P,
+            'total_CH': total_CH,
+            'total_CO': total_CO,
+            'total_SG': total_SG}
+
+
+def get_details_of_game_football(game):
+    teams = game.footballteaminfootballgame_set.all()
+    team = teams[0].team
+    events = get_events_by_game_and_team(game, team)
+    first_team_details = get_details_football(events)
+
+    team = teams[1].team
+
+    events = get_events_by_game_and_team(game, team)
+    second_team_details = get_details_football(events)
+
+    details = {
+        'game': game,
+        'teams': teams,
+        'first_team_details': first_team_details,
+        'second_team_details': second_team_details
+    }
+    return details

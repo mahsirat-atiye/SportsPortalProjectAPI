@@ -78,8 +78,8 @@ class Event(models.Model):
 
 class Player(Human):
     # team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    followers = models.ManyToManyField(User)
-    news = models.ManyToManyField(News)
+    followers = models.ManyToManyField(User, blank=True, null=True)
+    # news = models.ManyToManyField(News)
 
     # order by post js
     class Meta:

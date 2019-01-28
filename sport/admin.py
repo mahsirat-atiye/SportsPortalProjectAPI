@@ -21,6 +21,13 @@ admin.site.register(FootballVideo)
 
 admin.site.register(FootballTeamInFootballGame)
 admin.site.register(FootballPlayerInFootballGame)
+
+admin.site.register(BasketballTeamInBasketballGame)
+admin.site.register(BasketballPlayerInBasketballGame)
+
 admin.site.register(News)
 admin.site.register(Resource)
 admin.site.register(Tag)
+
+admin.site.register(BasketballImage)
+admin.site.register(BasketballVideo)

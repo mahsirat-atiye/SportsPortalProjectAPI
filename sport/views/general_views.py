@@ -40,7 +40,7 @@ def news_detail_view(request, news_id):
                   )
 
 
-def recent_general_news(request):
+def recent_general_news_games(request):
     news = News.objects.filter(publish_date__lte=timezone.now()).filter(
         publish_date__gte=timezone.now() - datetime.timedelta(days=2)).order_by('-publish_date')
 
@@ -99,45 +99,7 @@ def recent_general_news(request):
     return render(request, 'sport/general_home_page.html', context)
 
 #  ---------------------------------------------------------------------------------------
-def get_details_football(events):
-    total_G = 0
-    total_PG = 0
-    total_YC = 0
-    total_RC = 0
-    total_E = 0
-    total_P = 0
-    total_CH = 0
-    total_CO = 0
-    total_SG = 0
 
-    for e in events:
-        if e.event_type == 'G':
-            total_G += 1
-        elif e.event_type == 'PG':
-            total_PG += 1
-        elif e.event_type == 'YC':
-            total_YC += 1
-        elif e.event_type == 'RC':
-            total_RC += 1
-        elif e.event_type == 'E':
-            total_E += 1
-        elif e.event_type == 'P':
-            total_P += 1
-        elif e.event_type == 'CH':
-            total_CH += 1
-        elif e.event_type == 'CO':
-            total_CO += 1
-        elif e.event_type == 'SG':
-            total_SG += 1
-    return {'total_G': total_G,
-            'total_PG': total_PG,
-            'total_YC': total_YC,
-            'total_RC': total_RC,
-            'total_E': total_E,
-            'total_P': total_P,
-            'total_CH': total_CH,
-            'total_CO': total_CO,
-            'total_SG': total_SG}
 
 
 def get_events_by_game_and_team(game, team):
@@ -275,22 +237,3 @@ def separate_by_week(league):
     games_by_weeks.append(last_week_games)
     return games_by_weeks
 
-
-def get_details_of_game(game):
-    teams = game.footballteaminfootballgame_set.all()
-    team = teams[0].team
-    events = get_events_by_game_and_team(game, team)
-    first_team_details = get_details_football(events)
-
-    team = teams[1].team
-
-    events = get_events_by_game_and_team(game, team)
-    second_team_details = get_details_football(events)
-
-    details = {
-        'game': game,
-        'teams': teams,
-        'first_team_details': first_team_details,
-        'second_team_details': second_team_details
-    }
-    return details

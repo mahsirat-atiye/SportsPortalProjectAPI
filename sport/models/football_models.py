@@ -38,12 +38,12 @@ class FootballTeam(Team):
 
 
 class FootballLeague(League):
-    # game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)
+
     pass
 
 
 class FootballGame(Game):
-    # teams = models.ManyToManyField(FootballTeam)
+
     league = models.ForeignKey(FootballLeague, on_delete=models.CASCADE, blank=True, null=True)
 
 
@@ -58,8 +58,8 @@ class FootballEvent(Event):
     doer = models.ForeignKey(FootballPlayer, on_delete=models.CASCADE)  # ?
 
     def __str__(self):
-        s = self.doer.first_name + " " + self.doer.last_name + " in game " + str(
-            self.game.date) + "done" + self.event_type
+        s = self.doer.first_name + " " + self.doer.last_name + " در بازی " + str(
+            self.game.date) + "انجام داد" + self.event_type
         return s
 
 
@@ -77,7 +77,7 @@ class FootballTeamInFootballGame(models.Model):
     best_player = models.ForeignKey(FootballPlayer, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        s = self.team.name + " in game " + str(self.game.date)
+        s = self.team.name + " در بازی " + str(self.game.date)
         return s
 
 
@@ -89,13 +89,14 @@ class FootballPlayerInFootballGame(models.Model):
 
     def __str__(self):
         s = self.player.first_name + "  " + self.player.last_name
-        " in game " + str(self.game.date)
+        " در بازی " + str(self.game.date)
         return s
 
 
 class FootballImage(Image):
-    football_game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)
+    game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)
+    team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class FootballVideo(Video):
-    football_game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)
+    game = models.ForeignKey(FootballGame, on_delete=models.CASCADE, blank=True, null=True)
