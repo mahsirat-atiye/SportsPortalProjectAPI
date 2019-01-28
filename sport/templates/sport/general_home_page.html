@@ -5,10 +5,28 @@
     <title>Recent General News</title>
 </head>
 <body>
-{% if recent_news %}
-<h1>اخرین اخبار</h1>
+{% if recent_football_news  %}
+<h1>اخرین اخبارfoot</h1>
     <ul>
-        {% for n in recent_news %}
+        {% for n in recent_football_news  %}
+            <li>
+
+                                <a href="{% url 'sport:news-detail' n.id %}">
+                                    {{ n.title }}
+                                </a>
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>
+        No news yet!
+    </p>
+{% endif %}
+{% if recent_basketball_news  %}
+<h1>اخرین اخبارbasket </h1>
+    <ul>
+        {% for n in recent_basketball_news  %}
             <li>
 
                                 <a href="{% url 'sport:news-detail' n.id %}">
@@ -24,7 +42,7 @@
     </p>
 {% endif %}
 
-<form action="{% url 'home' %}" method="post">
+<form action="{% url 'sport:home' %}" method="post">
     {% csrf_token %}
     تعداد اخباری که می خواهید مشاهده کنید را وارد کنید
     <br>
@@ -36,10 +54,29 @@
 
 
 
-{% if favorite_news %}
-<h1>اخرین اخبار مورد علاقه</h1>
+{% if favorite_football_news %}
+<h1>اخرین اخبار مورد علاقه foot</h1>
     <ul>
-        {% for n in favorite_news %}
+        {% for n in favorite_football_news %}
+            <li>
+
+                                <a href="{% url 'sport:news-detail' n.id %}">
+                                    {{ n.title }}
+                                </a>
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>
+        اخبار مورد علاقه ای در دیروز و امروز وجود وجود ندارد!
+    </p>
+{% endif %}
+
+{% if favorite_basketball_news %}
+<h1>اخرین اخبار مورد علاقه basket</h1>
+    <ul>
+        {% for n in favorite_basketball_news %}
             <li>
 
                                 <a href="{% url 'sport:news-detail' n.id %}">
@@ -56,13 +93,31 @@
 {% endif %}
 
 <h1>to debug</h1>
-{% if teams %}
-    <h1>تیم های مورد علاقه</h1>
+{% if football_teams %}
+    <h1>تیم های مورد علاقهfoot </h1>
     <ul>
-        {% for t in teams %}
+        {% for t in football_teams %}
             <li>
 
                                 <a href="{% url 'sport:football-team-detail' t.id %}">
+                                    {{ t.name }}
+                                </a>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>هنوز تیمی مورد علاقه ثبت نشده است!</p>
+{% endif %}
+<h1>to debug</h1>
+{% if basketball_teams %}
+    <h1>تیم های مورد علاقه basket </h1>
+    <ul>
+        {% for t in basketball_teams %}
+            <li>
+
+                                <a href="{% url 'sport:basketball-team-detail' t.id %}">
                                     {{ t.name }}
                                 </a>
 

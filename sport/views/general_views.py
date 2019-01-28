@@ -41,10 +41,14 @@ def news_detail_view(request, news_id):
 
 
 def recent_general_news_games(request):
-    news = News.objects.filter(publish_date__lte=timezone.now()).filter(
+    football_news = News.objects.filter(type__exact='F').filter(publish_date__lte=timezone.now()).filter(
         publish_date__gte=timezone.now() - datetime.timedelta(days=2)).order_by('-publish_date')
 
-    teams = request.user.footballteam_set.all()  # for debug
+    basketball_news = News.objects.filter(type__exact='B').filter(publish_date__lte=timezone.now()).filter(
+        publish_date__gte=timezone.now() - datetime.timedelta(days=2)).order_by('-publish_date')
+
+    football_teams = request.user.footballteam_set.all()  # for debug
+    basketball_teams = request.user.basketballplayer_set.all()
 
     f1_ = request.user.footballteam_set.all()
     f2_ = request.user.footballplayer_set.all()
@@ -76,30 +80,45 @@ def recent_general_news_games(request):
         date__lte=timezone.now() + datetime.timedelta(days=1)).order_by('-date')[:10]
 
     # news
-    favorite_news = get_related_news_by_all_criteria(news, *favorites)
-
+    favorite_football_news = get_related_news_by_all_criteria(football_news, *favorites)
+    favorite_basketball_news = get_related_news_by_all_criteria(basketball_news, *favorites)
     if request.POST:
         n = int(request.POST['number'])
-        recent_news = News.objects.filter(publish_date__lte=timezone.now()).order_by('-publish_date')[:n]
+        recent_football_news = News.objects.filter(type__exact='F').filter(publish_date__lte=timezone.now()).order_by(
+            '-publish_date')[:n]
+        recent_basketball_news = News.objects.filter(type__exact='B').filter(publish_date__lte=timezone.now()).order_by(
+            '-publish_date')[:n]
+
     else:
-        recent_news = News.objects.filter(publish_date__lte=timezone.now()).order_by('-publish_date')[:10]
+        recent_football_news = News.objects.filter(type__exact='F').filter(publish_date__lte=timezone.now()).order_by(
+            '-publish_date')[:10]
+        recent_basketball_news = News.objects.filter(type__exact='B').filter(publish_date__lte=timezone.now()).order_by(
+            '-publish_date')[:10]
 
     context = {
-        'recent_news': recent_news,
-        'favorite_news': favorite_news,
-        'teams': teams,
+        'recent_football_news ': recent_football_news,
+        'recent_basketball_news': recent_basketball_news,
+
+        'favorite_football_news': favorite_football_news,
+        'favorite_basketball_news': favorite_basketball_news,
+
+        'football_teams': football_teams,
+        'basketball_teams': basketball_teams,
+
         'future_football_games': future_football_games,
         'future_basketball_games': future_basketball_games,
+
         'football_games': football_games,
         'basketball_games': basketball_games,
+
         'favorite_football_games': favorite_football_games,
         'favorite_basketball_games': favorite_basketball_games
 
     }
     return render(request, 'sport/general_home_page.html', context)
 
-#  ---------------------------------------------------------------------------------------
 
+#  ---------------------------------------------------------------------------------------
 
 
 def get_events_by_game_and_team(game, team):
@@ -236,4 +255,3 @@ def separate_by_week(league):
 
     games_by_weeks.append(last_week_games)
     return games_by_weeks
-
