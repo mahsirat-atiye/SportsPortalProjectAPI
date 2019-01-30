@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <title>News Detail</title>
         <style>
-             h3 {
+            h3 {
                 color: #2a6496;
 
             }
@@ -105,6 +105,25 @@
         {% endif %}
 
         {% if comments %}
+
+            <h3>تصاویر مرتبط با خبر</h3>
+            {% if news.basketballimage_set.all or news.footballimage_set.all%}
+
+                {% for i in game.footballimage_set.all %}
+                    <img width="600" height="600" src="{{ i.image.url }}" alt="image of game">
+                    <br>
+                    <p>{{ i.caption }}</p>
+                {% endfor %}
+
+                {% for i in game.basketballimage_set.all %}
+                    <img width="600" height="600" src="{{ i.image.url }}" alt="image of game">
+                    <br>
+                    <p>{{ i.caption }}</p>
+                {% endfor %}
+            {% else %}
+                <p>تصویری مرتبط با این خبر وجود ندارد</p>
+            {% endif %}
+            <hr style="border-style: dashed; color: #00b3ee;">
             <h3>کامنت ها</h3>
 
             {% for c in comments %}

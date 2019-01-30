@@ -48,7 +48,7 @@ def recent_general_news_games(request):
         publish_date__gte=timezone.now() - datetime.timedelta(days=2)).order_by('-publish_date')
 
     football_teams = request.user.footballteam_set.all()  # for debug
-    basketball_teams = request.user.basketballplayer_set.all()
+    basketball_teams = request.user.basketballteam_set.all()
 
     f1_ = request.user.footballteam_set.all()
     f2_ = request.user.footballplayer_set.all()
