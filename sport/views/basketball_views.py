@@ -36,7 +36,7 @@ def basketball_team_detail_view(request, team_id):
         elif request.POST["part"] == 'winning_losing':
             games = filter_games_by_winning_loosing(team_in_games, request.POST["choice"])
         elif request.POST["part"] == 'opponent_team':
-            games = filter_games_by_opponent(games, team=team, text=request.POST["opponent_team"])
+            games = filter_games_by_opponent_basketball(games, team=team, text=request.POST["opponent_team"])
         elif request.POST['part'] == 'follow':
             team.followers.add(request.user)
             logger = logging.getLogger(__name__)
@@ -220,3 +220,17 @@ def get_details_of_game_basketball(game):
         'second_team_details': second_team_details
     }
     return details
+def filter_games_by_opponent_basketball(games, team, text):
+    filtered_games = []
+    for g in games:
+        teams_in_game = g.basketballteaminbasketballgame_set.all()
+        if teams_in_game[0].team == team:
+            opponent_name = teams_in_game[1].team.name
+
+        else:
+            opponent_name = teams_in_game[0].team.name
+
+        if opponent_name.__contains__(text):
+            filtered_games.append(g)
+
+    return filtered_games

@@ -2,207 +2,253 @@
 {% block title %} جزئیات تیم {% endblock %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>basketball Team Detail</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>basketball Team Detail</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
 
-        #myInput {
-            background-image: url('./Desert.jpg');
-            background-position: 10px 12px;
-            background-repeat: no-repeat;
-            width: 100%;
-            font-size: 16px;
-            padding: 12px 20px 12px 40px;
-            border: 1px solid #ddd;
-            margin-bottom: 12px;
-        }
-
-        #myUL {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        #myUL li a {
-            border: 1px solid #ddd;
-            margin-top: -1px; /* Prevent double borders */
-            background-color: #f6f6f6;
-            padding: 12px;
-            text-decoration: none;
-            font-size: 18px;
-            color: black;
-            display: block
-        }
-
-        #myUL li a:hover:not(.header) {
-            background-color: #eee;
-        }
-    </style>
-
-    <script>
-        function myFunction() {
-            var input, filter, ul, li, a, i, txtValue;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("myUL");
-            li = ul.getElementsByTagName("li");
-            for (i = 0; i < li.length; i++) {
-                a = li[i].getElementsByTagName("a")[0];
-                txtValue = a.textContent || a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "";
-                } else {
-                    li[i].style.display = "none";
-                }
+        <style>
+            img {
+                border-radius: 50%;
             }
-        }
-    </script>
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $("#myInput").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#myTable tr").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        </script>
 
-</head>
-<body>
-<h1>{{ team.name }}</h1>
-
-<form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="part" value="filter_news">
-    <p>
-        <input type="radio" name="choice" value="tag" id="choice 1">
-        <label for="choice 1">براساس تگ</label>
-    </p>
-    <p>
-        <input type="radio" name="choice" value="title" id="choice 2">
-        <label for="choice 2">براساس عنوان</label>
-    </p>
-    <p>
-        <input type="radio" name="choice" value="text" id="choice 3">
-        <label for="choice 3">براساس متن</label>
-    </p>
-
-    <input type="submit" value="فیلتر">
-</form>
+    </head>
+    <body>
+    <br>
+    <br>
+    <h1>{{ team.name }}</h1>
+    <br>
+    <img src="{{ team.basketballimage_set.all.first.image.url }}" class="img-rounded" alt="logo" width="300"
+         height="300">
 
 
-{% if related_news %}
-    <h1>اخبار مرتبط</h1>
-    <ul>
-        {% for n in related_news %}
-            <li>
-
-                <a href="{% url 'sport:news-detail' n.id %}">
-                    {{ n.title }}
-                </a>
-                <p>{{ n.text }}</p>
-
-
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>اخباری مرتبط با این تیم وجود ندارد</p>
-{% endif %}
-
-
-
-
-
-{% if team.basketballplayer_set.all %}
-    <h1>بازیکنان</h1>
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-    <ul id="myUL">
-        {% for p in team.basketballplayer_set.all %}
-            <li>
-                <a href="{% url 'sport:basketball-player-detail' p.id %}">
-                    {{ p.first_name }} {{ p.last_name }}
-                </a>
-
-
-                {#                 todo posts must get better#}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>بازیکنی برای این تیم وجود ندارد</p>
-{% endif %}
-
-
-{% if team.basketballnonplayer_set.all %}
-    <h1>غیر بازیکنان</h1>
-    <ul>
-        {% for np in team.basketballnonplayer_set.all %}
-            <li>
-                <p>
-                    {{ np.first_name }} {{ np.last_name }}
-                </p>
-
-
-                {#                 todo posts must get better#}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p> غیر بازیکنی برای این تیم وجود ندارد</p>
-{% endif %}
-
-
-
-
-{% if games %}
-    <h1>بازی ها</h1>
+    <br>
+    <br>
     <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="part" value="winning_losing">
-        <p><label>براساس برد باخت مساوی</label>
-            <input type="radio" name="choice" value="AW" id="choice 11">
-            <label for="choice 11">برد</label>
-        </p>
-        <p><label>براساس برد باخت مساوی</label>
-            <input type="radio" name="choice" value="CL" id="choice 12">
-            <label for="choice 12">باخت</label>
-        </p>
-        <p><label>براساس برد باخت مساوی</label>
-            <input type="radio" name="choice" value="BE" id="choice 13">
-            <label for="choice 13">مساوی</label>
-        </p>
+        <input type="hidden" name="part" value="follow">
 
 
-        <input type="submit" value="فیلتر">
-    </form>
-    <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="part" value="opponent_team">
-        <input type="text" name="opponent_team" value="" id="choice 14">
-        <label for="choice 14">براساس تیم حریف</label>
-        <input type="submit" value="فیلتر">
+        <button type="submit" class="btn btn-outline-danger">دنبال کردن</button>
     </form>
 
-    <ul>
-        {% for g in games %}
-            <li>
-                <a href="{% url 'sport:basketball-game-detail' g.id %}">
-                    بازی
-                </a>
-                {% for tg in g.basketballteaminbasketballgame_set.all %}
-                    <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+    <br>
+    <br>
+    <h3 style="color: #2a6496">اخبار مرتبط</h3>
+    <hr style="border-style: dashed; color: #00b3ee;">
+    <div class="container">
+        <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-check">
+                <input type="hidden" name="part" value="filter_news">
+                <button type="submit" class="btn btn-outline-info">بازیابی اخبار</button>
+                <input type="radio" name="choice" value="tag" id="choice 1">
+                <label for="choice 1">براساس تگ</label>
+
+                <input type="radio" name="choice" value="title" id="choice 2">
+                <label for="choice 2">براساس عنوان</label>
+
+                <input type="radio" name="choice" value="text" id="choice 3">
+                <label for="choice 3">براساس متن</label>
+
+
+            </div>
+        </form>
+    </div>
+    <hr style="border-style: dashed; color: #00b3ee;">
+    {% if related_news %}
+        <div class="pre-scrollable">
+
+            {% for n in related_news %}
+                <div style="display: block">
+
+
+                    <button href="{% url 'sport:news-detail' n.id %}" type="button"
+                            class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</button>
+                    <br>
+                    <br>
+
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: darkred">اخباری مرتبط با این بازیکن وجود ندارد!</p>
+    {% endif %}
+
+
+    <div class="container">
+        <h2>بازیکنان</h2>
+        <br>
+
+        {% if team.basketballplayer_set.all %}
+
+            <input class="form-control" id="myInput" type="text" placeholder="بخشی از نام بازیکن را بنویسید...">
+            <br>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>بازیکنان</th>
+                </tr>
+                </thead>
+                <tbody id="myTable">
+
+                {% for p in team.basketballplayer_set.all %}
+                    <tr>
+                        <td>
+                            <br>
+                            <img src="{{ p.image.url }}" alt="image of player can not be loaded" width="80"
+                                 height="80">
+                            <br><br>
+                            <p>
+                                <a href="{% url 'sport:basketball-player-detail' p.id %}">
+                                    {{ p.first_name }} {{ p.last_name }}
+                                </a>
+                            </p>
+                        </td>
+
+
+                    </tr>
                 {% endfor %}
-                {#                    todo : games must have better appeatrence#}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>بازی برای این تیم وجود ندارد</p>
-{% endif %}
 
-<form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="part" value="follow">
+                </tbody>
+            </table>
+        {% else %}
+            <p>بازیکنی برای این تیم وجود ندارد</p>
+        {% endif %}
 
-    <input type="submit" value="فالو">
-</form>
+    </div>
 
-</body>
+<br>
+    <div class="container">
+        <h2>پشتیبانان</h2>
+        <br>
+
+        {% if team.basketballnonplayer_set.all %}
+
+            <input class="form-control" id="myInput" type="text" placeholder="بخشی از نام بازیکن را بنویسید...">
+            <br>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>پشتیبانان</th>
+                </tr>
+                </thead>
+                <tbody id="myTable">
+
+                {% for p in team.basketballnonplayer_set.all %}
+                    <tr>
+                        <td>
+                            <br>
+                            <img src="{{ p.image.url }}" alt="image of non player " width="80"
+                                 height="80">
+                            <br><br>
+                            <p>
+
+                                {{ p.first_name }} {{ p.last_name }}
+
+                            </p>
+                        </td>
+
+
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        {% else %}
+            <p>پشتیبانی برای این تیم وجود ندارد</p>
+        {% endif %}
+
+    </div>
+    <br>
+    #----------------
+
+
+
+
+        <h3 style="color: #2a6496">بازی ها</h3>
+    <hr style="border-style: dashed; color: #00b3ee;">
+    <div class="container">
+        <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-check">
+                <input type="hidden" name="part" value="winning_losing">
+                <button type="submit" class="btn btn-outline-info">بازیابی بازی ها براساس برد، باخت و مساوی</button>
+               <input type="radio" name="choice" value="AW" id="choice 11">
+                <label for="choice 11">برد</label>
+
+                <input type="radio" name="choice" value="CL" id="choice 12">
+                <label for="choice 12">باخت</label>
+
+                <input type="radio" name="choice" value="BE" id="choice 13">
+                <label for="choice 13">مساوی</label>
+
+
+            </div>
+        </form>
+    </div>
+    <hr style="border-style: dashed; color: #00b3ee;">
+     <div class="container">
+        <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="hidden" name="part" value="opponent_team">
+
+
+                <input type="text" name="opponent_team" class="form-control"
+                       placeholder="لطفا بخشی از نام حریف را بنویسید">
+                <div class="input-group-btn">
+
+                    <button type="submit" class="btn btn-outline-success">جست و جوی تیم براساس نام حریف</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    {% if games %}
+
+
+        #-------------------------
+
+        <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="part" value="opponent_team">
+            <input type="text" name="opponent_team" value="" id="choice 14">
+            <label for="choice 14">براساس تیم حریف</label>
+            <input type="submit" value="فیلتر">
+        </form>
+
+        <ul>
+            {% for g in games %}
+                <li>
+                    <a href="{% url 'sport:basketball-game-detail' g.id %}">
+                        بازی
+                    </a>
+                    {% for tg in g.basketballteaminbasketballgame_set.all %}
+                        <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
+                    {% endfor %}
+                    {#                    todo : games must have better appeatrence#}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>بازی برای این تیم وجود ندارد</p>
+    {% endif %}
+
+
+    </body>
 {% endblock %}

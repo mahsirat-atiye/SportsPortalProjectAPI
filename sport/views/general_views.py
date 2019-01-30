@@ -178,20 +178,6 @@ def get_related_news_by_text(news, *special_text):
     return related_news
 
 
-def filter_games_by_opponent(games, team, text):
-    filtered_games = []
-    for g in games:
-        teams_in_game = g.footballteaminfootballgame_set.all()
-        if teams_in_game[0].team == team:
-            opponent_name = teams_in_game[1].team.name
-
-        else:
-            opponent_name = teams_in_game[0].team.name
-
-        if opponent_name.__contains__(text):
-            filtered_games.append(g)
-
-    return filtered_games
 
 
 def filter_games_by_winning_loosing(team_in_games, situation_text):
