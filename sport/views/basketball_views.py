@@ -162,6 +162,7 @@ def basketball_league_detail(request, league_id):
             details = get_details_of_game_basketball(g)
             details_of_games_of_current_week.append(details)
         details_of_games_separated_by_weeks.append(details_of_games_of_current_week)
+  
 
     context = {
         'league': league,
