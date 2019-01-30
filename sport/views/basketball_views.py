@@ -95,12 +95,12 @@ def basketball_game_detail_view(request, game_id):
     game = get_object_or_404(BasketballGame, pk=game_id)
     teams = game.basketballteaminbasketballgame_set.all()
     team = teams[0].team
-    events = get_events_by_game_and_team(game, team)
+    events = get_events_by_game_and_team_basketball(game, team)
     first_team_details = get_details_basketball(events)
 
     team = teams[1].team
 
-    events = get_events_by_game_and_team(game, team)
+    events = get_events_by_game_and_team_basketball(game, team)
     second_team_details = get_details_basketball(events)
 
     news = News.objects.all().filter(publish_date__lt=game.date).order_by('-publish_date')
@@ -153,7 +153,7 @@ def basketball_league_detail(request, league_id):
     league = get_object_or_404(BasketballLeague, pk=league_id)
 
     # for weeks:
-    games_separated_by_weeks = separate_by_week(league)
+    games_separated_by_weeks = separate_by_week_basketball(league)
 
     details_of_games_separated_by_weeks = []
     for gw in games_separated_by_weeks:
@@ -205,12 +205,12 @@ def get_details_basketball(events):
 def get_details_of_game_basketball(game):
     teams = game.basketballteaminbasketballgame_set.all()
     team = teams[0].team
-    events = get_events_by_game_and_team(game, team)
+    events = get_events_by_game_and_team_basketball(game, team)
     first_team_details = get_details_basketball(events)
 
     team = teams[1].team
 
-    events = get_events_by_game_and_team(game, team)
+    events = get_events_by_game_and_team_basketball(game, team)
     second_team_details = get_details_basketball(events)
 
     details = {
@@ -220,6 +220,8 @@ def get_details_of_game_basketball(game):
         'second_team_details': second_team_details
     }
     return details
+
+
 def filter_games_by_opponent_basketball(games, team, text):
     filtered_games = []
     for g in games:
@@ -234,3 +236,46 @@ def filter_games_by_opponent_basketball(games, team, text):
             filtered_games.append(g)
 
     return filtered_games
+
+
+def separate_by_week_basketball(league):
+    games = league.basketballgame_set.order_by('-date')
+    last_game_date = games[0].date
+    first_game_date = games.last().date
+
+    # todo change it to persian # done ;))
+    last_game_weekday = last_game_date.weekday()
+    last_game_weekday += 2
+    last_game_weekday %= 7
+
+    last_interval = last_game_date - datetime.timedelta(days=last_game_weekday)
+    last_week_games = league.basketballgame_set.filter(
+        date__gte=last_interval)
+    first_game_weekday = first_game_date.weekday()
+
+    first_game_weekday += 2
+    first_game_weekday %= 7
+
+    first_interval = first_game_date + datetime.timedelta(days=7 - first_game_weekday)
+    first_week_games = league.basketballgame_set.filter(
+        date__lt=first_interval)
+
+    games_by_weeks = [first_week_games]
+    date = first_interval
+    while date < last_interval:
+        games_of_week = league.basketballgame_set.filter(
+            date__lte=date + datetime.timedelta(days=7)).filter(date__gt=date)
+        games_by_weeks.append(games_of_week)
+        date = date + datetime.timedelta(days=7)
+
+    games_by_weeks.append(last_week_games)
+    return games_by_weeks
+
+
+def get_events_by_game_and_team_basketball(game, team):
+    events_ = game.basketballevent_set.all()
+    events = []
+    for e in events_:
+        if e.doer.team == team:
+            events.append(e)
+    return events

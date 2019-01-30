@@ -121,13 +121,6 @@ def recent_general_news_games(request):
 #  ---------------------------------------------------------------------------------------
 
 
-def get_events_by_game_and_team(game, team):
-    events_ = game.footballevent_set.all()
-    events = []
-    for e in events_:
-        if e.doer.team == team:
-            events.append(e)
-    return events
 
 
 def get_related_news_by_all_criteria(news, *special_text):
@@ -209,35 +202,3 @@ def filter_leagues_by_text(leagues, special_text):
     return filtered_leagues
 
 
-def separate_by_week(league):
-    games = league.footballgame_set.order_by('-date')
-    last_game_date = games[0].date
-    first_game_date = games.last().date
-
-    # todo change it to persian # done ;))
-    last_game_weekday = last_game_date.weekday()
-    last_game_weekday += 2
-    last_game_weekday %= 7
-
-    last_interval = last_game_date - datetime.timedelta(days=last_game_weekday)
-    last_week_games = league.footballgame_set.filter(
-        date__gte=last_interval)
-    first_game_weekday = first_game_date.weekday()
-
-    first_game_weekday += 2
-    first_game_weekday %= 7
-
-    first_interval = first_game_date + datetime.timedelta(days=7 - first_game_weekday)
-    first_week_games = league.footballgame_set.filter(
-        date__lt=first_interval)
-
-    games_by_weeks = [first_week_games]
-    date = first_interval
-    while date < last_interval:
-        games_of_week = league.footballgame_set.filter(
-            date__lte=date + datetime.timedelta(days=7)).filter(date__gt=date)
-        games_by_weeks.append(games_of_week)
-        date = date + datetime.timedelta(days=7)
-
-    games_by_weeks.append(last_week_games)
-    return games_by_weeks
