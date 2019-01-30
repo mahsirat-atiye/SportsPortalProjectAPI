@@ -11,6 +11,10 @@
             img {
                 border-radius: 50%;
             }
+            h3 {
+                color: #2a6496;
+
+            }
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -46,51 +50,11 @@
     </form>
 
     <br>
-    <br>
-    <h3 style="color: #2a6496">اخبار مرتبط</h3>
-    <hr style="border-style: dashed; color: #00b3ee;">
-    <div class="container">
-        <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
-            {% csrf_token %}
-            <div class="form-check">
-                <input type="hidden" name="part" value="filter_news">
-                <button type="submit" class="btn btn-outline-info">بازیابی اخبار</button>
-                <input type="radio" name="choice" value="tag" id="choice 1">
-                <label for="choice 1">براساس تگ</label>
 
-                <input type="radio" name="choice" value="title" id="choice 2">
-                <label for="choice 2">براساس عنوان</label>
-
-                <input type="radio" name="choice" value="text" id="choice 3">
-                <label for="choice 3">براساس متن</label>
-
-
-            </div>
-        </form>
-    </div>
-    <hr style="border-style: dashed; color: #00b3ee;">
-    {% if related_news %}
-        <div class="pre-scrollable">
-
-            {% for n in related_news %}
-                <div style="display: block">
-
-
-                    <button href="{% url 'sport:news-detail' n.id %}" type="button"
-                            class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</button>
-                    <br>
-                    <br>
-
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p style="color: darkred">اخباری مرتبط با این بازیکن وجود ندارد!</p>
-    {% endif %}
 
 
     <div class="container">
-        <h2>بازیکنان</h2>
+        <h3>بازیکنان</h3>
         <br>
 
         {% if team.basketballplayer_set.all %}
@@ -131,9 +95,9 @@
 
     </div>
 
-<br>
+    <br>
     <div class="container">
-        <h2>پشتیبانان</h2>
+        <h3>پشتیبانان</h3>
         <br>
 
         {% if team.basketballnonplayer_set.all %}
@@ -174,12 +138,9 @@
 
     </div>
     <br>
-    #----------------
 
 
-
-
-        <h3 style="color: #2a6496">بازی ها</h3>
+    <h3 >بازی ها</h3>
     <hr style="border-style: dashed; color: #00b3ee;">
     <div class="container">
         <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
@@ -187,7 +148,7 @@
             <div class="form-check">
                 <input type="hidden" name="part" value="winning_losing">
                 <button type="submit" class="btn btn-outline-info">بازیابی بازی ها براساس برد، باخت و مساوی</button>
-               <input type="radio" name="choice" value="AW" id="choice 11">
+                <input type="radio" name="choice" value="AW" id="choice 11">
                 <label for="choice 11">برد</label>
 
                 <input type="radio" name="choice" value="CL" id="choice 12">
@@ -201,7 +162,7 @@
         </form>
     </div>
     <hr style="border-style: dashed; color: #00b3ee;">
-     <div class="container">
+    <div class="container">
         <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
             {% csrf_token %}
             <div class="input-group">
@@ -218,37 +179,104 @@
         </form>
     </div>
 
+    <hr style="border-style: dashed; color: #00b3ee;">
+    <br>
+    <div class="container">
+        {% if games %}
 
-    {% if games %}
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>تاریخ بازی</th>
+                    <th>نام تیم اول</th>
+                    <th>امتیاز تیم اول</th>
+                    <th>درصد مالکیت تیم اول</th>
+                    <th>نام تیم دوم</th>
+                    <th>امتیاز تیم دوم</th>
+                    <th>درصد مالکیت تیم دوم</th>
+                </tr>
+                </thead>
+                <tbody>
 
+                {% for g in games %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'sport:basketball-game-detail' g.id %}">
+                                {{ g.date }}
+                            </a>
+                        </td>
+                        {% for tg in g.basketballteaminbasketballgame_set.all %}
+                            <td>
+                                {% if  tg.team.name %}
+                                    {{ tg.team.name }}
+                                {% else %} ??
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if  tg.team_score %}
+                                    {{ tg.team_score }}
+                                {% else %} ??
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if  tg.property_percent %}
+                                    {{ tg.property_percent }}
+                                {% else %} ??
+                                {% endif %}
+                            </td>
 
-        #-------------------------
+                        {% endfor %}
 
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>بازی برای این تیم وجود ندارد</p>
+        {% endif %}
+
+    </div>
+
+    <br>
+    <h3 >اخبار مرتبط</h3>
+    <hr style="border-style: dashed; color: #00b3ee;">
+    <div class="container">
         <form action="{% url 'sport:basketball-team-detail' team.id %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="part" value="opponent_team">
-            <input type="text" name="opponent_team" value="" id="choice 14">
-            <label for="choice 14">براساس تیم حریف</label>
-            <input type="submit" value="فیلتر">
+            <div class="form-check">
+                <input type="hidden" name="part" value="filter_news">
+                <button type="submit" class="btn btn-outline-info">بازیابی اخبار</button>
+                <input type="radio" name="choice" value="tag" id="choice 1">
+                <label for="choice 1">براساس تگ</label>
+
+                <input type="radio" name="choice" value="title" id="choice 2">
+                <label for="choice 2">براساس عنوان</label>
+
+                <input type="radio" name="choice" value="text" id="choice 3">
+                <label for="choice 3">براساس متن</label>
+
+
+            </div>
         </form>
+    </div>
+    <hr style="border-style: dashed; color: #00b3ee;">
+    {% if related_news %}
+        <div class="pre-scrollable">
 
-        <ul>
-            {% for g in games %}
-                <li>
-                    <a href="{% url 'sport:basketball-game-detail' g.id %}">
-                        بازی
-                    </a>
-                    {% for tg in g.basketballteaminbasketballgame_set.all %}
-                        <p>{{ tg.team.name }} {{ tg.team_score }} {{ tg.property_percent }} </p>
-                    {% endfor %}
-                    {#                    todo : games must have better appeatrence#}
-                </li>
+            {% for n in related_news %}
+                <div style="display: block">
+
+
+                    <button href="{% url 'sport:news-detail' n.id %}" type="button"
+                            class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</button>
+                    <br>
+                    <br>
+
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <p>بازی برای این تیم وجود ندارد</p>
+        <p style="color: darkred">اخباری مرتبط با این بازیکن وجود ندارد!</p>
     {% endif %}
-
-
     </body>
 {% endblock %}
