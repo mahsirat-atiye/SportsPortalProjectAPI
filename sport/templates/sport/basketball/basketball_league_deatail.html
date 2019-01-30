@@ -3,59 +3,140 @@
 
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>basketball league detail</title>
-</head>
-<body>
-{% load custom_tags %}
-<h1>{{ league.name }}{{ league.year }} - {{ league.year|add:1 }}</h1>
-{% for dgw in details_of_games_separated_by_weeks %}
+    <head>
+        <meta charset="UTF-8">
+        <title>basketball league detail</title>
+        <style>
+            th {
+                word-break: keep-all;
+                word-wrap: normal;
+                width: max-content;
+                height: 10px;
+            }
+        </style>
 
-    <h1>{{ forloop.counter }} هفته</h1>
-    {% if dgw %}
-        <ul>
-            {% for dg in dgw %}
-                {% for key, value in dg.items %}
-                    {% ifequal key "game" %}
-                        <h1>game</h1>
-                        <h1>{{ value.date }}</h1>
-                    {% endifequal %}
-                    {% ifequal key "teams" %}
-                        {% for t in value %}
-                            <h4>
-                                {{ t.team.name }}  نام
-                                {{ t.team_score }}   امتیاز
-                                {{ t.property_percent }}  درصدمالکیت
-                                {% if  t.best_player %}
-                                    {{ t.best_player }}  بهترین بازیکن
-                                {% endif %}
-                            </h4>
-                        {% endfor %}
-                    {% endifequal %}
+        <script>
+            function myFunction() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        </script>
+
+    </head>
+    <body>
+    {% load custom_tags %}
+    <h1>{{ league.name }} {{ league.year }} - {{ league.year|add:1 }}</h1>
+    <div class="container">
+        <h3>جدول بازی های انجام شده در فصل</h3>
+        <br>
+        <input class="form-control" type="text" id="myInput" onkeyup="myFunction()"
+               placeholder="شماره هفته را وارد کنید.">
+        <br>
+
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="myTable">
+                <thead>
+                <tr>
+                    <th>هفته</th>
+                    <th><p>تاریخ بازی</p></th>
+                    <th>نام تیم اول</th>
+                    <th>امتیاز تیم اول</th>
+                    <th>درصد مالکیت تیم اول</th>
+                    <th>بهترین بازیکن تیم اول</th>
+
+                    <th>نام تیم اول</th>
+                    <th>امتیاز تیم اول</th>
+                    <th>درصد مالکیت تیم اول</th>
+                    <th>بهترین بازیکن تیم اول</th>
+
+
+                    <th>پرتاب های دو امتیازی تیم اول</th>
+                    <th>پرتاب های سه امتیازی تیم اول</th>
+                    <th>ریباندهای تیم اول</th>
+                    <th>خطاهای تیم اول</th>
+
+                    <th>پرتاب های دو امتیازی تیم دوم</th>
+                    <th>پرتاب های سه امتیازی تیم دوم</th>
+                    <th>ریباندهای تیم دوم</th>
+                    <th>خطاهای تیم دوم</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for dgw in details_of_games_separated_by_weeks %}
+                    {% with forloop.counter as outer_counter %}
+                        {% if dgw %}
+
+
+
+                            <tr>
+
+                                {% for dg in dgw %}
+                                    <td>{{ outer_counter }}</td>
+                                    {% for key, value in dg.items %}
+                                        {% ifequal key "game" %}
+
+                                            <td>{{ value.date }}</td>
+                                        {% endifequal %}
+                                        {% ifequal key "teams" %}
+                                            {% for t in value %}
+
+
+                                                <td>{% if t.team.name %}{{ t.team.name }} {% else %}?? {% endif %} </td>
+                                                <td>{% if t.team_score %}{{ t.team_score }} {% else %}
+                                                    ?? {% endif %} </td>
+
+                                                <td>{% if t.property_percent %}{{ t.property_percent }} {% else %}
+                                                    ?? {% endif %} </td>
+                                                <td>{% if t.best_player %}{{ t.best_player }} {% else %}
+                                                    ?? {% endif %} </td>
+
+                                            {% endfor %}
+                                        {% endifequal %}
+                                    {% endfor %}
+
+                                    <td>{{ dg|get_item:"first_team_details"|get_item:"total_2PT" }}
+                                    </td>
+                                    <td>{{ dg|get_item:"first_team_details"|get_item:"total_3PT" }}
+                                    </td>
+
+                                    <td>{{ dg|get_item:"first_team_details"|get_item:"total_R" }}</td>
+                                    <td>{{ dg|get_item:"first_team_details"|get_item:"total_E" }} </td>
+
+
+                                    <td>{{ dg|get_item:"second_team_details"|get_item:"total_2PT" }}</td>
+                                    <td>{{ dg|get_item:"second_team_details"|get_item:"total_3PT" }}
+                                    </td>
+
+                                    <td>{{ dg|get_item:"second_team_details"|get_item:"total_R" }}</td>
+                                    <td>{{ dg|get_item:"second_team_details"|get_item:"total_E" }} </td>
+
+                                {% endfor %}
+
+                            </tr>
+
+                        {% endif %}
+                    {% endwith %}
+
                 {% endfor %}
-                <h3>تیم اول</h3>
-                <p>{{ dg|get_item:"first_team_details"|get_item:"total_2PT" }}تعداد پرتاب دو امتیازی </p>
-                <p>{{ dg|get_item:"first_team_details"|get_item:"total_3PT" }}تعدادپرتاب سه امتیازی </p>
-
-                <p>{{ dg|get_item:"first_team_details"|get_item:"total_R" }}تعداد ریابندها </p>
-                <p>{{ dg|get_item:"first_team_details"|get_item:"total_E" }} تعداد خطا </p>
-
-
-                <h3>تیم دوم</h3>
-                <p>{{ dg|get_item:"second_team_details"|get_item:"total_2PT" }}تعداد دو امتنیازی </p>
-                <p>{{ dg|get_item:"second_team_details"|get_item:"total_3PT" }}تعداد پرتاب سه امتیازی </p>
-
-                <p>{{ dg|get_item:"second_team_details"|get_item:"total_R" }}تعداد ریباندها </p>
-                <p>{{ dg|get_item:"second_team_details"|get_item:"total_E" }} تعداد خطا </p>
-
-            {% endfor %}
-
-        </ul>
-    {% else %}
-        بازی در این هفته وجود ندارد
-    {% endif %}
-{% endfor %}
-
-</body>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </body>
 {% endblock %}
