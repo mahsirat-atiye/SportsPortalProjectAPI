@@ -3,132 +3,505 @@
 
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>basketball Game Detail</title>
-</head>
-<body>
-{% load custom_tags %}
-<h1>
-    {{ game.date }}بازی</h1>
-{% for t in teams %}
-    <h2>
-        {{ t.team.name }} {{ t.team_score }} {{ t.property_percent }}
-        {% if  t.best_player %}
-            {{ t.best_player }}
-        {% endif %}
-    </h2>
-{% endfor %}
-<h1>آمار مربوط به تیم اول</h1>
+    <head>
+        <meta charset="UTF-8">
+        <title>basketball Game Detail</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <style>
+             h3 {
+                color: #2a6496;
 
-<p>{{ first_team_details|get_item:"total_2PT" }}تعداد گل </p>
-<p>{{ first_team_details|get_item:"total_3PT" }}تعداد پاس گل </p>
+            }
+            img {
+                border-radius: 50%;
+            }
 
-<p>{{ first_team_details|get_item:"total_R" }}تعداد کارت قرمز </p>
-<p>{{ first_team_details|get_item:"total_E" }} تعداد خطا </p>
+            .timeline {
+                list-style: none;
+                padding: 20px 0 20px;
+                position: relative;
+            }
 
-<h1>آمار مربوط به تیم دوم</h1>
+            .timeline:before {
+                top: 0;
+                bottom: 0;
+                position: absolute;
+                content: " ";
+                width: 3px;
+                background-color: #eeeeee;
+                right: 25px;
+                margin-left: -1.5px;
+            }
 
-<p>{{ second_team_details|get_item:"total_2PT" }}تعداد گل </p>
-<p>{{ second_team_details|get_item:"total_3PT" }}تعداد پاس گل </p>
+            .timeline > li {
+                margin-bottom: 20px;
+                position: relative;
+            }
 
-<p>{{ second_team_details|get_item:"total_R" }}تعداد کارت قرمز </p>
-<p>{{ second_team_details|get_item:"total_E" }} تعداد خطا </p>
+            .timeline > li:before,
+            .timeline > li:after {
+                content: " ";
+                display: table;
+            }
+
+            .timeline > li:after {
+                clear: both;
+            }
+
+            .timeline > li:before,
+            .timeline > li:after {
+                content: " ";
+                display: table;
+            }
+
+            .timeline > li:after {
+                clear: both;
+            }
+
+            .timeline > li > .timeline-panel {
+                width: calc(100% - 75px);
+                float: left;
+                border: 1px solid #d4d4d4;
+                border-radius: 2px;
+                padding: 20px;
+                position: relative;
+                -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+                box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+            }
+
+            .timeline > li > .timeline-panel:before {
+                position: absolute;
+                top: 26px;
+                right: -15px;
+                display: inline-block;
+                border-top: 15px solid transparent;
+                border-left: 15px solid #ccc;
+                border-right: 0 solid #ccc;
+                border-bottom: 15px solid transparent;
+                content: " ";
+            }
+
+            .timeline > li > .timeline-panel:after {
+                position: absolute;
+                top: 27px;
+                right: -14px;
+                display: inline-block;
+                border-top: 14px solid transparent;
+                border-left: 14px solid #fff;
+                border-right: 0 solid #fff;
+                border-bottom: 14px solid transparent;
+                content: " ";
+            }
+
+            .timeline > li > .timeline-badge {
+                color: #fff;
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                font-size: 1.4em;
+                text-align: center;
+                position: absolute;
+                top: 16px;
+                right: 0px;
+                margin-left: -25px;
+                background-color: #999999;
+                z-index: 100;
+                border-top-right-radius: 50%;
+                border-top-left-radius: 50%;
+                border-bottom-right-radius: 50%;
+                border-bottom-left-radius: 50%;
+            }
+
+            .timeline > li.timeline-inverted > .timeline-panel {
+                float: right;
+            }
+
+            .timeline > li.timeline-inverted > .timeline-panel:before {
+                border-left-width: 0;
+                border-right-width: 15px;
+                left: -15px;
+                right: auto;
+            }
+
+            .timeline > li.timeline-inverted > .timeline-panel:after {
+                border-left-width: 0;
+                border-right-width: 14px;
+                left: -14px;
+                right: auto;
+            }
+
+            .timeline-badge.primary {
+                background-color: #2e6da4 !important;
+            }
+
+            .timeline-badge.success {
+                background-color: #3f903f !important;
+            }
+
+            .timeline-badge.warning {
+                background-color: #f0ad4e !important;
+            }
+
+            .timeline-badge.danger {
+                background-color: #d9534f !important;
+            }
+
+            .timeline-badge.info {
+                background-color: #5bc0de !important;
+            }
+
+            .timeline-title {
+                margin-top: 0;
+                color: inherit;
+            }
+
+            .timeline-body > p,
+            .timeline-body > ul {
+                margin-bottom: 0;
+            }
+
+            .timeline-body > p + p {
+                margin-top: 5px;
+            }
+        </style>
+
+    </head>
+    <body>
+    {% load custom_tags %}
 
 
-<h1>خط زمانی</h1>
-{% for e in game.basketballevent_set.all %}
-    <p>{{ e.exact_time }} {{ e.doer.first_name }} {{ e.doer.last_name }} {{ e.get_event_type_display }}</p>
-{% endfor %}
-{% if game.report %}
-    <h1>
-        گزارش لحظه به لحظه
-    </h1>
-    <p>
-        {{ game.report }}
-    </p>
-{% else %}
-{% endif %}
-{% if game.basketballimage_set.all %}
-    <h1>تصاویر مرتبط با بازی</h1>
-    {% for i in game.basketballimage_set.all %}
-        <img src="{{ i.image.url }}" alt="image of game acn not be loaded">
-        <p>{{ i.image.url }}</p>
-        <p>{{ i.caption }}</p>
+    <br><br>
+    <h1>بازی</h1>
+    <br>
+    <h1> {{ game.date }} </h1>
+    <br>
+    <br>
+
+    {% for t in teams %}
+        <h3>
+            {{ t.team.name }}
+            <img width="70" height="70" src="{{ t.team.basketballimage_set.all.first.image.url }}" alt="logo">
+        </h3>
     {% endfor %}
+    <br>
+    <br>
+    <div class="container">
+
+        <table class="table table-hover">
+            <tr>
+                <th> تیم</th>
+                <th>امتیاز</th>
+                <th>درصد مالکیت</th>
+                <th>بازیکن برتر</th>
+                <th>پرتاب های دو امتیازی</th>
+                <th>پرتاب های سه امتیازی</th>
+                <th>ریباندها</th>
+                <th>خطاها</th>
+            </tr>
+            <tr>
+                <td>
+                    {{ teams.first.team.name }}
+                    <img width="30" height="30" src="{{ teams.first.team.basketballimage_set.all.first.image.url }}"
+                         alt="logo">
+                </td>
+                <td>
+                    {% if teams.first.team_score %} {{ teams.first.team_score }}{% else %} ?? {% endif %}
+                </td>
+                <td>
+                    {% if teams.first.property_percent %} {{ teams.first.property_percent }}{% else %} ?? {% endif %}
+
+                </td>
+                <td>
+                    {% if teams.first.best_player %} {{ teams.first.best_player }}{% else %} ?? {% endif %}
+
+                </td>
+                <td>
+                    {{ first_team_details|get_item:"total_2PT" }}
+                </td>
+                <td>
+                    {{ first_team_details|get_item:"total_3PT" }}
+                </td>
+                <td>
+                    {{ first_team_details|get_item:"total_R" }}
+                </td>
+                <td>
+                    {{ first_team_details|get_item:"total_E" }}
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    {{ teams.last.team.name }}
+                    <img width="30" height="30" src="{{ teams.last.team.basketballimage_set.all.first.image.url }}"
+                         alt="logo">
+                </td>
+                <td>
+                    {% if teams.last.team_score %} {{ teams.last.team_score }}{% else %} ?? {% endif %}
+                </td>
+                <td>
+                    {% if teams.last.property_percent %} {{ teams.last.property_percent }}{% else %} ?? {% endif %}
+
+                </td>
+                <td>
+                    {% if teams.last.best_player %} {{ teams.last.best_player }}{% else %} ?? {% endif %}
+
+                </td>
+                <td>
+                    {{ second_team_details|get_item:"total_2PT" }}
+                </td>
+                <td>
+                    {{ second_team_details|get_item:"total_3PT" }}
+                </td>
+                <td>
+                    {{ second_team_details|get_item:"total_R" }}
+                </td>
+                <td>
+                    {{ second_team_details|get_item:"total_E" }}
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+
+
+    {% if first_team_players_in_game %}
+        <div class="container">
+            <input class="form-control" id="myInput" type="text" placeholder="بخشی از نام بازیکن را بنویسید...">
+            <br>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th width="80%">بازیکنان تیم {{ teams.first.team.name }}</th>
+                    <th width="20%">زمان تعویض</th>
+                </tr>
+                </thead>
+                <tbody id="myTable">
+
+                {% for pg in first_team_players_in_game %}
+                    <tr>
+                        <td>
+                            <br>
+                            <img src="{{ pg.player.image.url }}" alt="image of player can not be loaded" width="80"
+                                 height="80">
+                            <br><br>
+                            {% if  pg.main_player %}
+                                <p style="color: green">
+                                    <a style="color: green"
+                                       href="{% url 'sport:basketball-player-detail' pg.player.id %}">
+                                        {{ pg.player.first_name }} {{ pg.player.last_name }}
+                                    </a>
+                                </p>
+                            {% else %}
+                                <p style="color: red">
+                                    <a style="color: red"
+                                       href="{% url 'sport:basketball-player-detail' pg.player.id %}">
+                                        {{ pg.player.first_name }} {{ pg.player.last_name }}
+                                    </a>
+                                </p>
+                            {% endif %}
+                        </td>
+                        <td>{% if pg.time_of_change %} {{ pg.time_of_change }} {% else %} --{% endif %}</td>
+
+
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
     {% else %}
-    <p>تصویری مرتبط با این بازی وجود ندارد</p>
-{% endif %}
+        <p>اعضای تیم اول در این بازی مشخص نشده اند</p>
+    {% endif %}
 
-{% if game.basketballvideo_set.all %}
-    <h1>فیلم های مرتبط با ابین  بازی </h1>
-    {% for v in game.basketballvideo_set.all %}
-        <video width="400" controls>
-        <source src="{{ v.url }}">
-        </video>
-        <p>{{ v.url }}</p>
-        <p>{{ v.caption }}</p>
-    {% endfor %}
+    <br>
+    <br>
+    {% if second_team_players_in_game %}
+        <div class="container">
+            <input class="form-control" id="myInput_" type="text" placeholder="بخشی از نام بازیکن را بنویسید...">
+            <br>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th width="80%">بازیکنان تیم {{ teams.last.team.name }}</th>
+                    <th width="20%">زمان تعویض</th>
+                </tr>
+                </thead>
+                <tbody id="myTable_">
+
+                {% for pg in second_team_players_in_game %}
+                    <tr>
+                        <td>
+                            <br>
+                            <img src="{{ pg.player.image.url }}" alt="image of player can not be loaded" width="80"
+                                 height="80">
+                            <br><br>
+                            {% if  pg.main_player %}
+                                <p style="color: green">
+                                    <a style="color: green"
+                                       href="{% url 'sport:basketball-player-detail' pg.player.id %}">
+                                        {{ pg.player.first_name }} {{ pg.player.last_name }}
+                                    </a>
+                                </p>
+                            {% else %}
+                                <p style="color: red">
+                                    <a style="color: red"
+                                       href="{% url 'sport:basketball-player-detail' pg.player.id %}">
+                                        {{ pg.player.first_name }} {{ pg.player.last_name }}
+                                    </a>
+                                </p>
+                            {% endif %}
+                        </td>
+                        <td>{% if pg.time_of_change %} {{ pg.time_of_change }} {% else %} --{% endif %}</td>
+
+
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
     {% else %}
-    <p>فیلمی مرتبط با این بازی وجود ندارد!</p>
-{% endif %}
+        <p>اعضای تیم دوم در این بازی مشخص نشده اند</p>
+    {% endif %}
+
+    {% if game.basketballevent_set.all %}
+        <h3>خط زمانی</h3>
+        <div class="container">
+            <ul class="timeline">
+                {% for e in game.basketballevent_set.all %}
+
+                    <li>
+                        <div class="timeline-badge danger"><i class="glyphicon glyphicon-check"></i></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">{{ e.get_event_type_display }}</h4>
+                                <p>
+                                    <small class="text-muted"><i
+                                            class="glyphicon glyphicon-time"></i> {{ e.exact_time }}
+                                    </small>
+                                </p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>
+                                    {{ e.doer.first_name }} {{ e.doer.last_name }}
+                                    بازیکن تیم
+                                    {{ e.doer.team.name }}
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if game.report %}
+        <hr style="border-style: dashed; color: #00b3ee;">
+        <h3>
+            گزارش لحظه به لحظه
+        </h3>
+        <hr style="border-style: dashed; color: #00b3ee;">
+        <p>
+            {{ game.report }}
+        </p>
+        <hr style="border-style: dashed; color: #00b3ee;">
+    {% else %}
+    {% endif %}
+    <hr style="border-style: dashed; color: #00b3ee;">
+    <h3> قبل از بازی اخبار مرتبط</h3>
+    {% if news_before %}
+        <div class="pre-scrollable">
+
+            {% for n in news_before %}
+                <div style="display: block">
 
 
-{% if news_before %}
-    <h1> قبل از بازی اخبار مرتبط</h1>
-    <ul>
-        {% for n in news_before %}
-            <li>
+                    <button href="{% url 'sport:news-detail' n.id %}" type="button"
+                            class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</button>
+                    <br>
+                    <br>
 
-                <a href="{% url 'sport:news-detail' n.id %}">
-                    {{ n.title }}
-                </a>
-                <p>{{ n.text }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p>اخبار مرتبط قبلی با این بازی وجود ندارد</p>
+    {% endif %}
+    <hr style="border-style: dashed; color: #00b3ee;">
+    <h3>اخبار مرتبط حین یا بعد از بازی</h3>
+
+    {% if news_after %}
+        <div class="pre-scrollable">
+
+            {% for n in news_after %}
+                <div style="display: block">
 
 
-            </li>
+                    <button href="{% url 'sport:news-detail' n.id %}" type="button"
+                            class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</button>
+                    <br>
+                    <br>
+
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+    {% else %}
+        <p>اخبار مرتبط حین یا بعد با این بازی وجود ندارد</p>
+    {% endif %}
+    <h3>تصاویر مرتبط با بازی</h3>
+    {% if game.basketballimage_set.all %}
+
+        {% for i in game.basketballimage_set.all %}
+            <img src="{{ i.image.url }}" alt="image of game">
+            <br>
+            <p>{{ i.caption }}</p>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>اخباری مرتبط قبلی با این بازی وجود ندارد</p>
-{% endif %}
-
-{% if news_after %}
-    <h1>اخبار مرتبط حین یا بعد از بازی</h1>
-    <ul>
-        {% for n in news_after %}
-            <li>
-
-                <a href="{% url 'sport:news-detail' n.id %}">
-                    {{ n.title }}
-                </a>
-                <p>{{ n.text }}</p>
-
-
-            </li>
+    {% else %}
+        <p>تصویری مرتبط با این بازی وجود ندارد</p>
+    {% endif %}
+    <hr style="border-style: dashed; color: #00b3ee;">
+    {% if game.basketballvideo_set.all %}
+        <h3>فیلم های مرتبط با این بازی </h3>
+        {% for v in game.basketballvideo_set.all %}
+            <video width="400" controls>
+                <source src="{{ v.video.url }}" type="video/wmv">
+            </video>
+            <br>
+            <p>{{ v.video.url }}</p>
+            <p>{{ v.caption }}</p>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>اخباری مرتبط حین یا بعد با این بازی وجود ندارد</p>
-{% endif %}
-
-</body>
-{% if first_team_players_in_game %}
-    <h1>اعضای تیم اول</h1>
-    {% for pg in first_team_players_in_game %}
-        {{ pg.player.first_name }} {{ pg.player.last_name }} {{ pg.main_player }} {{ pg.time_of_change }}
-    {% endfor %}
     {% else %}
-    <p>اعضای تیم اول در این بازی مشخص نشده اند</p>
-{% endif %}
+        <p>فیلمی مرتبط با این بازی وجود ندارد!</p>
+    {% endif %}
 
-{% if second_team_players_in_game %}
-    <h1>اعضای تیم دوم</h1>
-    {% for pg in second_team_players_in_game %}
-        {{ pg.player.first_name }} {{ pg.player.last_name }} {{ pg.main_player }} {{ pg.time_of_change }}
-    {% endfor %}
-    {% else %}
-    <p>اعضای تیم دوم در این بازی مشخص نشدخ اند.</p>
-{% endif %}
+
+    <script>
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#myInput_").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable_ tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+    </body>
 {% endblock %}
 ock %}
