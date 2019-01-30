@@ -2,88 +2,149 @@
 {% block title %} جزئیات خبر {% endblock %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>News Detail</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>News Detail</title>
+        <style>
+             h3 {
+                color: #2a6496;
 
-<h1>{{ news.title }}</h1>
-<h3>{{ news.publish_date }}</h3>
+            }
 
-{% if news.resource_set.all %}
-    <h3>منابع</h3>
-    <ul>
-        {% for r in news.resource_set.all %}
-            <li>
-                <p> {{ r.name }}</p>
-            </li>
+            img {
+                border-radius: 50%;
+            }
 
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>منبع ندارد!</p>
-{% endif %}
+            #rcorners2 {
+                border-radius: 25px;
+                border: 2px solid #73AD21;
+                padding: 20px;
+                width: 200px;
+            {#height: 150px;#} background: #c09853;
+                display: block;
+            }
+
+            .shadow-textarea textarea.form-control::placeholder {
+                font-weight: 300;
+            }
+
+            .shadow-textarea textarea.form-control {
+                padding-left: 0.8rem;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <br><br>
+        <h1>{{ news.title }}</h1>
+        <p style="color: #006dcc">{{ news.publish_date }}</p>
+
+        {% if news.resource_set.all %}
+            <div>
+                منابع:
+
+                {% for r in news.resource_set.all %}
+                    <div style="display: inline">
+                        * {{ r.name }}
+                    </div>
+
+                {% endfor %}
+                <div style="display: inline">
+                    *
+                </div>
+            </div>
+
+        {% else %}
+            <p>منبع ندارد!</p>
+        {% endif %}
+        <hr style="border-style: dashed; color: #00b3ee;">
+
+        <p>{{ news.text }}</p>
+
+        <hr style="border-style: dashed; color: #00b3ee;">
+        {% if news.tag_set.all %}
+            <div>
+                تگ های مرتبط:
+
+                {% for t in news.tag_set.all %}
+                    <div style="display: inline">
+                        * {{ t.text }}
+                    </div>
+
+                {% endfor %}
+                <div style="display: inline">
+                    *
+                </div>
+            </div>
+
+        {% else %}
+            <p>تگ مرتبط ندارد!</p>
+        {% endif %}
+        <hr style="border-style: dashed; color: #00b3ee;">
 
 
-<p>{{ news.text }}</p>
+        <h3>اخبار مرتبط</h3>
+        <hr style="border-style: dashed; color: #00b3ee;">
+        {% if related_news %}
+            <div class="pre-scrollable">
+
+                {% for n in related_news %}
+                    <div style="display: block">
 
 
+                        <a href="{% url 'sport:news-detail' n.id %}" type="button"
+                           class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</a>
+                        <br>
+                        <br>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: darkred">اخباری مرتبط با این بازیکن وجود ندارد!</p>
+        {% endif %}
+
+        {% if comments %}
+            <h3>کامنت ها</h3>
+
+            {% for c in comments %}
+
+                <div id="rcorners2">
+                    <h5>{{ c.writer.username }}:
+                        {{ c.title }}
+                    </h5>
+                    <p>{{ c.text }}</p>
+                </div>
+                <br>
+
+            {% endfor %}
+
+        {% else %}
+            <p>کامنتی وجود ندارد برای این خبر</p>
+        {% endif %}
+
+        <form action="{% url 'sport:news-detail' news.id %}" method="post" id="usrform">
+            {% csrf_token %}
 
 
-{% if news.tag_set.all %}
-    <h3>تگ های مرتبط</h3>
-    <ul>
-        {% for t in news.tag_set.all %}
-            <li>
-                <p> {{ t.text }}</p>
-            </li>
+            <div class="input-group">
 
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>تگ مرتبط ندارد!</p>
-{% endif %}
+                <input type="text" name="title" class="form-control"
+                       placeholder=" موضوع نظر">
+                <div class="input-group-btn">
 
-{% if related_news %}
-    <h3>خبرهای مرتبط</h3>
-    <ul>
-        {% for rn in related_news %}
-            <li>
-                <a href="{% url 'sport:news-detail' news.id %}">
-                    {{ rn.title }}
-                </a>
+                    <button type="submit" class="btn btn-outline-warning">ارسال نظر</button>
+                </div>
+            </div>
+        </form>
+        <br>
 
-            </li>
 
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>خبر مرتبط ندارد!</p>
-{% endif %}
-{% if comments %}
-    <h1>کامنت ها</h1>
-    <ul>
-    {% for c in comments %}
-        <li>
-        <h3>{{ c.title }}</h3>
-            <h5>{{ c.writer.username }}</h5>
-        <p>{{ c.text }}</p>
-        </li>
-    {% endfor %}
-    </ul>
-    {% else %}
-    <p>کامنتی وجود ندارد برای این خبر</p>
-{% endif %}
+        <div class="form-group shadow-textarea">
 
-<form action="{% url 'sport:news-detail' news.id %}" method="post" id="usrform">
-    {% csrf_token %}
-    <input type="submit" value="ارایه">
-    <input type="text" name="title" value="موضوع">
-</form>
-<br>
-<textarea rows="4" cols="50" name="comment" form="usrform">
-Enter text here...</textarea>
-
-</body>
+        <textarea name="comment" form="usrform" class="form-control z-depth-1" id="exampleFormControlTextarea6" rows="3"
+                  placeholder="متن نظر خود را وارد کنید..."></textarea>
+        </div>
+    </div>
+    </body>
 {% endblock %}
