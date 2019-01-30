@@ -13,3 +13,9 @@ in react-app>
         in package.json:
             add following line:
                 "proxy": "http://localhost:8000"
+
+لیست کارهای باقی مانده
+اضافه کردن واقعه بسکتبال
+دیباگ و تکمیل صفحه جزییات لیگ
+تغییر جنگو ادمین
+ورود کاربر
