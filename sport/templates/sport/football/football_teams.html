@@ -2,30 +2,66 @@
 {% block title %} تیم ها {% endblock %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>Football Teams</title>
-</head>
-<body>
+    <head>
+        <title>Teams</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <style>
+            img {
+                border-radius: 50%;
+            }
+            a {
+                color: #002a80;
+            }
+        </style>
+    </head>
+    <body>
+
+    <div class="container">
+    <br><br>
+        <h2>تیم ها</h2>
+    <br>
+        <p> تیم هایی که می توانید اخبار آن ها را از این سایت پیروی کنید:</p>
+        <input class="form-control" id="myInput" type="text" placeholder="بخشی از نام تیم را بنویسید">
+        <br>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>تیم ها</th>
+            </tr>
+            </thead>
+            <tbody id="myTable">
+            {% for t in teams %}
+                <tr>
+                    <td>
+
+                        <a href="{% url 'sport:football-team-detail' t.id %}">
+                            {{ t.name }}
+                        </a>
+                        <img src="{{ t.footballimage_set.all.first.image.url }}" alt="logo" width="30" height="30">
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
 
-{% if teams %}
-    <h1>تیم ها</h1>
-    <ul>
-        {% for t in teams %}
-            <li>
+    </div>
 
-                                <a href="{% url 'sport:football-team-detail' t.id %}">
-                                    {{ t.name }}
-                                </a>
+    <script>
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 
-
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>هنوز تیمی ثبت نشده است!</p>
-{% endif %}
-
-</body>
+    </body>
 {% endblock %}
