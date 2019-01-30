@@ -7,7 +7,11 @@
         <meta charset="UTF-8">
         {#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">#}
 
-
+        <style>
+            img {
+                border-radius: 50%;
+            }
+        </style>
     </head>
     <body>
     {% load custom_tags %}
@@ -18,11 +22,15 @@
     <h1>{{ player.first_name }} {{ player.last_name }}</h1>
 
     <h6>
-    {{ player.team.name }}
+        {{ player.team.name }}
+
+
+    <img src="{{ player.team.basketballimage_set.all.first.image.url }}" class="img-rounded" alt="logo" width="30"
+         height="30">
     </h6>
-     <br>
     <br>
-    <img src="{{ player.image.url }}" alt="image of player can not be loaded">
+    <br>
+    <img src="{{ player.image.url }}" alt="image of player can not be loaded" width="300" height="300">
 
     <br>
     <br>
@@ -115,19 +123,20 @@
     </div>
     <hr style="border-style: dashed; color: #00b3ee;">
     {% if related_news %}
-
+        <div class="pre-scrollable">
 
             {% for n in related_news %}
                 <div style="display: block">
 
 
-                    <button href="{% url 'sport:news-detail' n.id %}" type="button" class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</button>
+                    <button href="{% url 'sport:news-detail' n.id %}" type="button"
+                            class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</button>
                     <br>
                     <br>
 
                 </div>
             {% endfor %}
-
+        </div>
     {% else %}
         <p style="color: darkred">اخباری مرتبط با این بازیکن وجود ندارد!</p>
     {% endif %}

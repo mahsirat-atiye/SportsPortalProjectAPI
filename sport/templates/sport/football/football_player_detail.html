@@ -1,89 +1,172 @@
+
 {% extends 'base.html' %}
 {% block title %} جزئیات بازیکن فوتبال {% endblock %}
 
+
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>Football Player Detail</title>
-</head>
-<body>
-{% load custom_tags %}
+    <head>
+        <meta charset="UTF-8">
+        {#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">#}
 
+        <style>
+            img {
+                border-radius: 50%;
+            }
+        </style>
+    </head>
+    <body>
+    {% load custom_tags %}
 
-<h1>{{ player.first_name }} {{ player.last_name }}</h1>
-<img src="{{ player.image.url }}" alt="image of player can not be loaded">
-
-<h2>اطلاعات</h2>
-<p>{{ player.height }} قد:</p>
-<p>{{ player.weight }}وزن: </p>
-<p>{{ player.birth_day }} تاریخ تولد: </p>
-<h1>آمار</h1>
-
-<p>{{ details|get_item:"total_G" }}تعداد گل </p>
-<p>{{ details|get_item:"total_PG" }}تعداد پاس گل </p>
-<p>{{ details|get_item:"total_YC" }}تعداد کارت زرد </p>
-<p>{{ details|get_item:"total_RC" }}تعداد کارت قرمز </p>
-<p>{{ details|get_item:"total_E" }} تعداد خطا </p>
-<p>{{ details|get_item:"total_P" }}تعداد پنالتی </p>
-<p>{{ details|get_item:"total_CH" }}تعداد تعویض </p>
-<p>{{ details|get_item:"total_CO" }}تعداد کرنر </p>
-<p>{{ details|get_item:"total_SG" }}تعداد موقعیت گل </p>
-
-<form action="{% url 'sport:football-player-detail' player.id %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="part" value="for_season">
-    لطفا فصلی که می خواهید آمار مربوط به آن را مشاهده کنید را وارد کنید
     <br>
-    <input type="number" name="season" value="2019">
     <br>
-    <br><br>
-    <input type="submit" value="Submit">
-</form>
 
-<form action="{% url 'sport:football-player-detail' player.id %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="part" value="filter_news">
-    <p>
-        <input type="radio" name="choice" value="tag" id="choice 1">
-        <label for="choice 1">براساس تگ</label>
-    </p>
-    <p>
-        <input type="radio" name="choice" value="title" id="choice 2">
-        <label for="choice 2">براساس عنوان</label>
-    </p>
-    <p>
-        <input type="radio" name="choice" value="text" id="choice 3">
-        <label for="choice 3">براساس متن</label>
-    </p>
+    <h1>{{ player.first_name }} {{ player.last_name }}</h1>
 
-    <input type="submit" value="فیلتر">
-</form>
-
-{% if related_news %}
-    <h1>اخبار مرتبط</h1>
-    <ul>
-        {% for n in related_news %}
-            <li>
-
-                <a href="{% url 'sport:news-detail' n.id %}">
-                    {{ n.title }}
-                </a>
-                <p>{{ n.text }}</p>
+    <h6>
+        {{ player.team.name }}
 
 
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>اخباری مرتبط با این بازیکن وجود ندارد</p>
-{% endif %}
+    <img src="{{ player.team.footballimage_set.all.first.image.url }}" class="img-rounded" alt="logo" width="30"
+         height="30">
+    </h6>
+    <br>
+    <br>
+    <img src="{{ player.image.url }}" alt="image of player can not be loaded" width="300" height="300">
 
-<form action="{% url 'sport:football-player-detail' player.id %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="part" value="follow">
+    <br>
+    <br>
 
-    <input type="submit" value="فالو">
-</form>
+    <p> قد:{{ player.height }} سانتی متر-
+        وزن:{{ player.weight }} کیلوگرم </p>
+    <p dir="auto">تاریخ تولد: {{ player.birth_day }} </p>
 
-</body>
+    <form action="{% url 'sport:football-player-detail' player.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="part" value="follow">
+
+
+        <button type="submit" class="btn btn-outline-danger">دنبال کردن</button>
+    </form>
+
+    <br>
+
+    <br>
+
+    <div class="container">
+
+        <table class="table table-hover">
+            <tr>
+                <th>اطلاعات آماری</th>
+                <th>تعداد</th>
+            </tr>
+            <tr>
+                <td>گل</td>
+                <td>{{ details|get_item:"total_G"}}</td>
+
+            </tr>
+            <tr>
+                <td>پاس گل</td>
+                <td>{{ details|get_item:"total_PG" }}</td>
+
+            </tr>
+            <tr>
+                <td>کارت زرد</td>
+                <td>{{ details|get_item:"total_YC"  }} </td>
+
+            </tr>
+            <tr>
+                <td>کارت قرمز</td>
+                <td>{{ details|get_item:"total_RC" }}</td>
+
+            </tr>
+            <tr>
+                <td>خطا</td>
+                <td>{{ details|get_item:"total_E" }}</td>
+
+            </tr>
+            <tr>
+                <td>پنالتی</td>
+                <td>{{ details|get_item:"total_P" }}</td>
+
+            </tr>
+            <tr>
+                <td>تعویض</td>
+                <td>{{ details|get_item:"total_CH" }}</td>
+
+            </tr>
+            <tr>
+                <td>کرنر</td>
+                <td>{{ details|get_item:"total_CO" }}</td>
+
+            </tr>
+             <tr>
+                <td>موقعیت گل</td>
+                <td>{{ details|get_item:"total_SG" }}</td>
+
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="container">
+        <form action="{% url 'sport:football-player-detail' player.id %}" method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="hidden" name="part" value="for_season">
+
+
+                <input type="number" name="season" class="form-control"
+                       placeholder="لطفا فصلی که می خواهید آمار مربوط به آن را مشاهده کنید را وارد کنید، به طور مثال 2019">
+                <div class="input-group-btn">
+
+                    <button type="submit" class="btn btn-outline-success">جست و جو</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    <br>
+    <h3 style="color: #2a6496">اخبار مرتبط</h3>
+    <hr style="border-style: dashed; color: #00b3ee;">
+    <div class="container">
+        <form action="{% url 'sport:football-player-detail' player.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-check">
+                <input type="hidden" name="part" value="filter_news">
+                <button type="submit" class="btn btn-outline-info">بازیابی اخبار</button>
+                <input type="radio" name="choice" value="tag" id="choice 1">
+                <label for="choice 1">براساس تگ</label>
+
+                <input type="radio" name="choice" value="title" id="choice 2">
+                <label for="choice 2">براساس عنوان</label>
+
+                <input type="radio" name="choice" value="text" id="choice 3">
+                <label for="choice 3">براساس متن</label>
+
+
+            </div>
+        </form>
+    </div>
+    <hr style="border-style: dashed; color: #00b3ee;">
+    {% if related_news %}
+        <div class="pre-scrollable">
+
+            {% for n in related_news %}
+                <div style="display: block">
+
+
+                    <button href="{% url 'sport:news-detail' n.id %}" type="button"
+                            class="btn btn-outline-secondary">{{ n.publish_date }} : {{ n.title }}</button>
+                    <br>
+                    <br>
+
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: darkred">اخباری مرتبط با این بازیکن وجود ندارد!</p>
+    {% endif %}
+
+
+    </body>
 {% endblock %}
