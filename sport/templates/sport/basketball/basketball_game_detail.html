@@ -458,7 +458,7 @@
     {% if game.basketballimage_set.all %}
 
         {% for i in game.basketballimage_set.all %}
-            <img src="{{ i.image.url }}" alt="image of game">
+            <img width="600" height="600" src="{{ i.image.url }}" alt="image of game">
             <br>
             <p>{{ i.caption }}</p>
         {% endfor %}
