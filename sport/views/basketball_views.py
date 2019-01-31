@@ -160,8 +160,9 @@ def basketball_league_detail(request, league_id):
         teams_score_card = []
 
     # for weeks:
-    games_separated_by_weeks = separate_by_week_basketball(league)
-
+    try :
+        games_separated_by_weeks = separate_by_week_basketball(league)
+    except: games_separated_by_weeks = []
     details_of_games_separated_by_weeks = []
     for gw in games_separated_by_weeks:
         details_of_games_of_current_week = []
