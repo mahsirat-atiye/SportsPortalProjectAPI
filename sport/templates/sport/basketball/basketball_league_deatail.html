@@ -55,14 +55,23 @@
                     <th>هفته</th>
                     <th><p>تاریخ بازی</p></th>
                     <th>نام تیم اول</th>
-                    <th>امتیاز تیم اول</th>
+                    <th>امتیاز ربع اول  تیم اول</th>
+                    <th>امتیاز ربع دوم  تیم اول</th>
+                    <th>امتیاز ربع سوم  تیم اول</th>
+                    <th>امتیاز ربع چهارم  تیم اول</th>
+
                     <th>درصد مالکیت تیم اول</th>
                     <th>بهترین بازیکن تیم اول</th>
 
-                    <th>نام تیم اول</th>
-                    <th>امتیاز تیم اول</th>
-                    <th>درصد مالکیت تیم اول</th>
-                    <th>بهترین بازیکن تیم اول</th>
+                    <th>نام تیم دوم</th>
+
+                    <th>امتیاز ربع اول تیم دوم</th>
+                    <th>امتیاز ربع دوم تیم دوم</th>
+                    <th>امتیاز ربع سوم تیم دوم</th>
+                    <th>امتیاز ربع چهارم تیم دوم</th>
+
+                    <th>درصد مالکیت تیم دوم</th>
+                    <th>بهترین بازیکن تیم دوم</th>
 
 
                     <th>پرتاب های دو امتیازی تیم اول</th>
@@ -104,7 +113,13 @@
 
 
                                                 <td>{% if t.team.name %}{{ t.team.name }} {% else %}?? {% endif %} </td>
-                                                <td>{% if t.team_score %}{{ t.team_score }} {% else %}
+                                                <td>{% if t.team_score_Q1 %}{{ t.team_score_Q1 }} {% else %}
+                                                    ?? {% endif %} </td>
+                                                <td>{% if t.team_score_Q2 %}{{ t.team_score_Q2 }} {% else %}
+                                                    ?? {% endif %} </td>
+                                                <td>{% if t.team_score_Q3 %}{{ t.team_score_Q3 }} {% else %}
+                                                    ?? {% endif %} </td>
+                                                <td>{% if t.team_score_Q4 %}{{ t.team_score_Q4 }} {% else %}
                                                     ?? {% endif %} </td>
 
                                                 <td>{% if t.property_percent %}{{ t.property_percent }} {% else %}

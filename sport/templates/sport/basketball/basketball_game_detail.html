@@ -191,7 +191,10 @@
         <table class="table table-hover">
             <tr>
                 <th> تیم</th>
-                <th>امتیاز</th>
+                <th>امتیاز ربع اول</th>
+                <th>امتیاز ربع دوم</th>
+                <th>امتیاز ربع سوم</th>
+                <th>امتیاز ربع چهارم</th>
                 <th>درصد مالکیت</th>
                 <th>بازیکن برتر</th>
                 <th>پرتاب های دو امتیازی</th>
@@ -209,7 +212,19 @@
                          alt="logo">
                 </td>
                 <td>
-                    {% if teams.first.team_score %} {{ teams.first.team_score }}{% else %} ?? {% endif %}
+                    {% if teams.first.team_score_Q1 %} {{ teams.first.team_score_Q1 }}{% else %} ?? {% endif %}
+                </td>
+
+                <td>
+                    {% if teams.first.team_score_Q2 %} {{ teams.first.team_score_Q2 }}{% else %} ?? {% endif %}
+                </td>
+
+                <td>
+                    {% if teams.first.team_score_Q3 %} {{ teams.first.team_score_Q3 }}{% else %} ?? {% endif %}
+                </td>
+
+                <td>
+                    {% if teams.first.team_score_Q4 %} {{ teams.first.team_score_Q4 }}{% else %} ?? {% endif %}
                 </td>
                 <td>
                     {% if teams.first.property_percent %} {{ teams.first.property_percent }}{% else %} ?? {% endif %}
@@ -250,8 +265,19 @@
                          alt="logo">
                 </td>
                 <td>
-                    {% if teams.last.team_score %} {{ teams.last.team_score }}{% else %} ?? {% endif %}
+                    {% if teams.last.team_score_Q1 %} {{ teams.last.team_score_Q1 }}{% else %} ?? {% endif %}
                 </td>
+
+                <td>
+                    {% if teams.last.team_score_Q2 %} {{ teams.last.team_score_Q2 }}{% else %} ?? {% endif %}
+                </td>
+                <td>
+                    {% if teams.last.team_score_Q3 %} {{ teams.last.team_score_Q3 }}{% else %} ?? {% endif %}
+                </td>
+                <td>
+                    {% if teams.last.team_score_Q4 %} {{ teams.last.team_score_Q4 }}{% else %} ?? {% endif %}
+                </td>
+
                 <td>
                     {% if teams.last.property_percent %} {{ teams.last.property_percent }}{% else %} ?? {% endif %}
 

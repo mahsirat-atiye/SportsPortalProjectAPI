@@ -213,8 +213,8 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if  tg.team_score %}
-                                    {{ tg.team_score }}
+                                {% if  tg.team_score_Q1 and tg.team_score_Q2 and tg.team_score_Q3 and tg.team_score_Q4 %}
+                                    {{ tg.team_score_Q1|add: tg.team_score_Q2|add: tg.team_score_Q3|add:tg.team_score_Q4 }}
                                 {% else %} ??
                                 {% endif %}
                             </td>

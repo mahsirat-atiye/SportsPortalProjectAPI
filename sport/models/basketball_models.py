@@ -64,7 +64,12 @@ class BasketballNonPlayer(Human):
 class BasketballTeamInBasketballGame(models.Model):
     game = models.ForeignKey(BasketballGame, on_delete=models.CASCADE)
     team = models.ForeignKey(BasketballTeam, on_delete=models.CASCADE)
-    team_score = models.IntegerField(blank=True, null=True)
+
+    team_score_Q1 = models.IntegerField(blank=True, null=True)
+    team_score_Q2 = models.IntegerField(blank=True, null=True)
+    team_score_Q3 = models.IntegerField(blank=True, null=True)
+    team_score_Q4 = models.IntegerField(blank=True, null=True)
+
     property_percent = models.IntegerField(blank=True, null=True)
     situation = models.CharField(max_length=3, choices=TEAM_SITUATION_IN_GAME, blank=True, null=True)
     best_player = models.ForeignKey(BasketballPlayer, on_delete=models.CASCADE, blank=True, null=True)
