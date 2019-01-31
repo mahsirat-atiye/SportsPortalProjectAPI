@@ -9,6 +9,9 @@ BASKETBALL_PLAYER_EVENT_CHOICES = (
     ('3PT', 'پرتاب سه امتیازی'),
     ('E', 'خطا'),
     ('R', 'ریباند'),
+    ('P', 'پنالتی'),
+    ('LP', 'از دست دادن پنالتی'),
+    ('CH', 'تعویض'),
 )
 
 BASKETBALL_POST_CHOICES = (

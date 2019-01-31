@@ -198,6 +198,9 @@
                 <th>پرتاب های سه امتیازی</th>
                 <th>ریباندها</th>
                 <th>خطاها</th>
+                <th>پنالتی</th>
+                <th>پنالتی از دست رفته</th>
+                <th>تعویض</th>
             </tr>
             <tr>
                 <td>
@@ -229,6 +232,16 @@
                     {{ first_team_details|get_item:"total_E" }}
                 </td>
 
+                 <td>
+                    {{ first_team_details|get_item:"total_P" }}
+                </td>
+                 <td>
+                    {{ first_team_details|get_item:"total_LP" }}
+                </td>
+                 <td>
+                    {{ first_team_details|get_item:"total_CH" }}
+                </td>
+
             </tr>
             <tr>
                 <td>
@@ -258,6 +271,16 @@
                 </td>
                 <td>
                     {{ second_team_details|get_item:"total_E" }}
+                </td>
+
+                <td>
+                    {{ second_team_details|get_item:"total_P" }}
+                </td>
+                 <td>
+                    {{ second_team_details|get_item:"total_LP" }}
+                </td>
+                 <td>
+                    {{ second_team_details|get_item:"total_CH" }}
                 </td>
 
             </tr>

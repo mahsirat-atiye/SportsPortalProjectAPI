@@ -163,7 +163,6 @@ def basketball_league_detail(request, league_id):
             details_of_games_of_current_week.append(details)
         details_of_games_separated_by_weeks.append(details_of_games_of_current_week)
 
-
     context = {
         'league': league,
         'details_of_games_separated_by_weeks': details_of_games_separated_by_weeks
@@ -177,6 +176,9 @@ BASKETBALL_PLAYER_EVENT_CHOICES = (
     ('3PT', 'پرتاب سه امتیازی'),
     ('E', 'خطا'),
     ('R', 'ریباند'),
+    ('P', 'پنالتی'),
+    ('LP', 'از دست دادن پنالتی'),
+    ('CH', 'تعویض'),
 )
 
 
@@ -185,6 +187,9 @@ def get_details_basketball(events):
     total_3PT = 0
     total_E = 0
     total_R = 0
+    total_P = 0
+    total_LP = 0
+    total_CH = 0
 
     for e in events:
         if e.event_type == '2PT':
@@ -195,11 +200,20 @@ def get_details_basketball(events):
             total_E += 1
         elif e.event_type == 'R':
             total_R += 1
+        elif e.event_type == 'P':
+            total_P += 1
+        elif e.event_type == 'LP':
+            total_LP += 1
+        elif e.event_type == 'CH':
+            total_CH += 1
 
     return {'total_2PT': total_2PT,
             'total_3PT': total_3PT,
             'total_E': total_E,
             'total_R': total_R,
+            'total_P': total_P,
+            'total_LP': total_LP,
+            'total_CH': total_CH,
             }
 
 

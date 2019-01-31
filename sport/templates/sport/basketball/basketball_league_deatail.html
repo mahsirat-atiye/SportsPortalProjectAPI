@@ -69,11 +69,17 @@
                     <th>پرتاب های سه امتیازی تیم اول</th>
                     <th>ریباندهای تیم اول</th>
                     <th>خطاهای تیم اول</th>
+                    <th>پنالتی های تیم اول</th>
+                    <th>پنالتی های از دست رفته تیم اول</th>
+                    <th>تعویض های تیم اول</th>
 
                     <th>پرتاب های دو امتیازی تیم دوم</th>
                     <th>پرتاب های سه امتیازی تیم دوم</th>
                     <th>ریباندهای تیم دوم</th>
                     <th>خطاهای تیم دوم</th>
+                     <th>پنالتی های تیم دوم</th>
+                    <th>پنالتی های از دست رفته تیم دوم</th>
+                    <th>تعویض های تیم دوم</th>
 
                 </tr>
                 </thead>
@@ -117,6 +123,10 @@
 
                                     <td>{{ dg|get_item:"first_team_details"|get_item:"total_R" }}</td>
                                     <td>{{ dg|get_item:"first_team_details"|get_item:"total_E" }} </td>
+                                    <td>{{ dg|get_item:"first_team_details"|get_item:"total_P" }}</td>
+                                    <td>{{ dg|get_item:"first_team_details"|get_item:"total_LP" }} </td>
+                                    <td>{{ dg|get_item:"first_team_details"|get_item:"total_CH" }}</td>
+
 
 
                                     <td>{{ dg|get_item:"second_team_details"|get_item:"total_2PT" }}</td>
@@ -125,6 +135,12 @@
 
                                     <td>{{ dg|get_item:"second_team_details"|get_item:"total_R" }}</td>
                                     <td>{{ dg|get_item:"second_team_details"|get_item:"total_E" }} </td>
+
+                                    <td>{{ dg|get_item:"second_team_details"|get_item:"total_P" }}</td>
+                                    <td>{{ dg|get_item:"second_team_details"|get_item:"total_LP" }} </td>
+
+                                    <td>{{ dg|get_item:"second_team_details"|get_item:"total_CH" }}</td>
+
 
                                 {% endfor %}
 
