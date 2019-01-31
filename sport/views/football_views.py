@@ -1,5 +1,5 @@
 from sport.models import FootballTeam, FootballPlayer, FootballGame, FootballLeague, BasketballGame
-
+import pandas as pd
 import logging
 
 from sport.views.general_views import *
@@ -151,6 +151,10 @@ def football_leagues(request):
 
 def football_league_detail(request, league_id):
     league = get_object_or_404(FootballLeague, pk=league_id)
+    try:
+        teams_score_card = get_score_card_of_league_football(league)
+    except :
+        teams_score_card = []
 
     # for weeks:
     games_separated_by_weeks = separate_by_week_football(league)
@@ -165,7 +169,8 @@ def football_league_detail(request, league_id):
 
     context = {
         'league': league,
-        'details_of_games_separated_by_weeks': details_of_games_separated_by_weeks
+        'details_of_games_separated_by_weeks': details_of_games_separated_by_weeks,
+        'teams_score_card': teams_score_card
     }
     return render(request, 'sport/football/football_league_detail.html', context)
 
@@ -250,6 +255,7 @@ def filter_games_by_opponent_football(games, team, text):
 
 def separate_by_week_football(league):
     games = league.footballgame_set.order_by('-date')
+    # try:
     last_game_date = games[0].date
     first_game_date = games.last().date
 
@@ -282,6 +288,10 @@ def separate_by_week_football(league):
     return games_by_weeks
 
 
+# except:
+#     return []
+
+
 def get_events_by_game_and_team_football(game, team):
     events_ = game.footballevent_set.all()
     events = []
@@ -289,3 +299,47 @@ def get_events_by_game_and_team_football(game, team):
         if e.doer.team == team:
             events.append(e)
     return events
+
+
+def get_score_card_of_league_football(league):
+    games_in_league = league.footballgame_set.all()
+    teams_in_league = set([])
+    for g in games_in_league:
+        for t in g.footballteaminfootballgame_set.all():
+            teams_in_league.add(t.team)
+    teams_score_card = []
+    for t in teams_in_league:
+        team_total_score = 0
+        team_details = []
+        opponent_team_details = []
+
+        for g in games_in_league:
+            team_in_game = g.footballteaminfootballgame_set.all()
+            if team_in_game[0].team == t:
+                if team_in_game[0].team_score:
+                    team_total_score += team_in_game[0].team_score
+                events = get_events_by_game_and_team_football(g, t)
+                team_details.append(get_details_football(events))
+
+                opponent_events = get_events_by_game_and_team_football(g, team_in_game[1].team)
+                opponent_team_details.append(get_details_football(opponent_events))
+            elif team_in_game[1].team == t:
+                if team_in_game[1].team_score:
+                    team_total_score += team_in_game[1].team_score
+                events = get_events_by_game_and_team_football(g, t)
+                team_details.append(get_details_football(events))
+
+                opponent_events = get_events_by_game_and_team_football(g, team_in_game[0].team)
+                opponent_team_details.append(get_details_football(opponent_events))
+
+        # summation on details
+        sumation_of_details = pd.DataFrame(team_details).sum().to_dict()
+        sumation_of_opponent_details = pd.DataFrame(opponent_team_details).sum().to_dict()
+        m = {
+            'team': t,
+            'sumation_of_details': sumation_of_details,
+            'sumation_of_opponent_details': sumation_of_opponent_details,
+            'team_total_score': team_total_score
+        }
+        teams_score_card.append(m)
+    return teams_score_card

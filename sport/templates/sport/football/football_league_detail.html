@@ -63,6 +63,20 @@
         بازی در این هفته وجود ندارد
     {% endif %}
 {% endfor %}
+<h1>jadval emtiazat</h1>
+{% for tsc in teams_score_card %}
+    {% for key, value in tsc.items %}
+        {% ifequal key 'team' %}
+            <h1> {{ value.name }} </h1>
+        {% endifequal %}
+        {% endfor %}
+
+    <p>{{ tsc|get_item:"team_total_score" }}</p>
+    <p>{{ tsc|get_item:"sumation_of_details"|get_item:"total_G" }}</p>
+    sumation_of_opponent_details
+    <p>{{ tsc|get_item:"sumation_of_opponent_details"|get_item:"total_G" }}</p>
+<h1>hkguigo</h1>
+{% endfor %}
 
 </body>
 {% endblock %}

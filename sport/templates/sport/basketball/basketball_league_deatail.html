@@ -6,6 +6,7 @@
     <head>
         <meta charset="UTF-8">
         <title>basketball league detail</title>
+
         <style>
             th {
                 word-break: keep-all;
@@ -55,10 +56,10 @@
                     <th>هفته</th>
                     <th><p>تاریخ بازی</p></th>
                     <th>نام تیم اول</th>
-                    <th>امتیاز ربع اول  تیم اول</th>
-                    <th>امتیاز ربع دوم  تیم اول</th>
-                    <th>امتیاز ربع سوم  تیم اول</th>
-                    <th>امتیاز ربع چهارم  تیم اول</th>
+                    <th>امتیاز ربع اول تیم اول</th>
+                    <th>امتیاز ربع دوم تیم اول</th>
+                    <th>امتیاز ربع سوم تیم اول</th>
+                    <th>امتیاز ربع چهارم تیم اول</th>
 
                     <th>درصد مالکیت تیم اول</th>
                     <th>بهترین بازیکن تیم اول</th>
@@ -86,7 +87,7 @@
                     <th>پرتاب های سه امتیازی تیم دوم</th>
                     <th>ریباندهای تیم دوم</th>
                     <th>خطاهای تیم دوم</th>
-                     <th>پنالتی های تیم دوم</th>
+                    <th>پنالتی های تیم دوم</th>
                     <th>پنالتی های از دست رفته تیم دوم</th>
                     <th>تعویض های تیم دوم</th>
 
@@ -169,5 +170,69 @@
             </table>
         </div>
     </div>
+
+   <br>
+    <br>
+    <div class="container">
+            <h3>جدول امتیازات</h3>
+        <table id="example"
+               class="table table-striped table-inverse table-bordered table-hover" cellspacing="0"
+               width="100%">
+            <thead>
+            <tr>
+                <th>نام تیم</th>
+                <th>مجموع امتیاز ها</th>
+                <th> پرتاب سه امتیازی زده</th>
+                <th> پرتاب سه امتیازی خورده</th>
+                <th> پرتاب دو امتیازی زده</th>
+                <th> پرتاب دو امتیازی خورده</th>
+                 <th> خطا</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tsc in teams_score_card %}
+            <tr>
+                <td>
+                    {% for key, value in tsc.items %}
+            {% ifequal key 'team' %}
+                 {{ value.name }}
+            {% endifequal %}
+        {% endfor %}
+                </td>
+            {{ tsc|get_item:"team_total_score" }}
+                <td>
+
+                </td>
+                <td>
+                    {{ tsc|get_item:"sumation_of_details"|get_item:"total_3PT" }}
+                </td>
+                <td>
+                    {{ tsc|get_item:"sumation_of_opponent_details"|get_item:"total_3PT" }}
+                </td>
+
+                <td>
+                    {{ tsc|get_item:"sumation_of_details"|get_item:"total_2PT" }}
+                </td>
+                <td>
+                    {{ tsc|get_item:"sumation_of_opponent_details"|get_item:"total_2PT" }}
+                </td>
+                <td>
+                    {{ tsc|get_item:"sumation_of_details"|get_item:"total_E" }}
+                </td>
+
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.13/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+    </script>
+
     </body>
 {% endblock %}

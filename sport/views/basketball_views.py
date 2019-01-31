@@ -1,3 +1,5 @@
+import pandas as pd
+
 from sport.models import BasketballTeam, BasketballLeague, BasketballPlayer
 
 import logging
@@ -152,6 +154,11 @@ def basketball_leagues(request):
 def basketball_league_detail(request, league_id):
     league = get_object_or_404(BasketballLeague, pk=league_id)
 
+    try:
+        teams_score_card = get_score_card_of_league_basketball(league)
+    except:
+        teams_score_card = []
+
     # for weeks:
     games_separated_by_weeks = separate_by_week_basketball(league)
 
@@ -165,7 +172,8 @@ def basketball_league_detail(request, league_id):
 
     context = {
         'league': league,
-        'details_of_games_separated_by_weeks': details_of_games_separated_by_weeks
+        'details_of_games_separated_by_weeks': details_of_games_separated_by_weeks,
+        'teams_score_card': teams_score_card
     }
     return render(request, 'sport/basketball/basketball_league_deatail.html', context)
 
@@ -294,3 +302,56 @@ def get_events_by_game_and_team_basketball(game, team):
         if e.doer.team == team:
             events.append(e)
     return events
+
+
+def get_score_card_of_league_basketball(league):
+    games_in_league = league.basketballgame_set.all()
+    teams_in_league = set([])
+    for g in games_in_league:
+        for t in g.basketballteaminbasketballgame_set.all():
+            teams_in_league.add(t.team)
+    teams_score_card = []
+    for t in teams_in_league:
+        team_total_score = 0
+        team_details = []
+        opponent_team_details = []
+
+        for g in games_in_league:
+            team_in_game = g.basketballteaminbasketballgame_set.all()
+            if team_in_game[0].team == t:
+                if team_in_game[0].team_score_Q1 and team_in_game[0].team_score_Q2 and team_in_game[0].team_score_Q3 and \
+                        team_in_game[0].team_score_Q4:
+                    team_total_score += team_in_game[0].team_score_Q1
+                    team_total_score += team_in_game[0].team_score_Q2
+                    team_total_score += team_in_game[0].team_score_Q3
+                    team_total_score += team_in_game[0].team_score_Q4
+                events = get_events_by_game_and_team_basketball(g, t)
+                team_details.append(get_details_basketball(events))
+
+                opponent_events = get_events_by_game_and_team_basketball(g, team_in_game[1].team)
+                opponent_team_details.append(get_details_basketball(opponent_events))
+            elif team_in_game[1].team == t:
+                if team_in_game[1].team_score_Q1 and team_in_game[1].team_score_Q2 and team_in_game[1].team_score_Q3 and \
+                        team_in_game[1].team_score_Q4:
+                    team_total_score += team_in_game[1].team_score_Q1
+                    team_total_score += team_in_game[1].team_score_Q2
+                    team_total_score += team_in_game[1].team_score_Q3
+                    team_total_score += team_in_game[1].team_score_Q4
+
+                events = get_events_by_game_and_team_basketball(g, t)
+                team_details.append(get_details_basketball(events))
+
+                opponent_events = get_events_by_game_and_team_basketball(g, team_in_game[0].team)
+                opponent_team_details.append(get_details_basketball(opponent_events))
+
+        # summation on details
+        sumation_of_details = pd.DataFrame(team_details).sum().to_dict()
+        sumation_of_opponent_details = pd.DataFrame(opponent_team_details).sum().to_dict()
+        m = {
+            'team': t,
+            'sumation_of_details': sumation_of_details,
+            'sumation_of_opponent_details': sumation_of_opponent_details,
+            'team_total_score': team_total_score
+        }
+        teams_score_card.append(m)
+    return teams_score_card
