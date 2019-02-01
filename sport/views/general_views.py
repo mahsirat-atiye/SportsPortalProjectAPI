@@ -121,8 +121,6 @@ def recent_general_news_games(request):
 #  ---------------------------------------------------------------------------------------
 
 
-
-
 def get_related_news_by_all_criteria(news, *special_text):
     related_news = set([])
     for st in special_text:

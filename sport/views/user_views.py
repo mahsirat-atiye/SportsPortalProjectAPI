@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 import django.contrib.auth as dj_auth
 
+from api.email import send_email
+from api.user import generate_hash, request_activation, validate_user
 from sport.models import UserProfile
 from sport.models import SignupForm
 from sport.models import LoginForm
@@ -16,10 +18,17 @@ def signup(request):
         if f.is_valid():
             f.save()
             username = f.cleaned_data['username']
+            email = f.cleaned_data['email']
+            User.objects.filter(username=username).update(is_active=False)
             new_user = User.objects.get(username=username)
             prof = UserProfile(user=new_user)
+
+            key = request_activation(username)
+
+            send_email(email, 'activation', 'http://127.0.0.1:8000/validate/' + key)
+
             prof.save()
-            return redirect('login')
+            return HttpResponseRedirect('/')
     else:
         f = SignupForm()
     return render(request, 'registration/signup.html', {'form': f})
@@ -41,3 +50,7 @@ def login(request):
     else:
         f = LoginForm()
     return render(request, 'registration/login.html', {'form': f})
+
+
+def validate(request, hashcode):
+    validate_user(hashcode)

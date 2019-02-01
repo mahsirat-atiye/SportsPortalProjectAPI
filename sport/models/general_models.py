@@ -141,3 +141,14 @@ class UserProfile(models.Model):
 #     game = models.ForeignKey(Game, on_delete=models.CASCADE)
 #     player = models.ForeignKey(Player,)
 #
+
+
+class ForgottenUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    key = models.TextField(max_length=32)
+
+
+class ActivateUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    key = models.TextField(max_length=32)
+

@@ -16,6 +16,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),  # new
     path('accounts/signup/', signup, name='signup'),
     path('accounts/login/', login, name='login'),
+    path('<str:hashcode>/validate/', validate, name='login'),
 
     # football
 

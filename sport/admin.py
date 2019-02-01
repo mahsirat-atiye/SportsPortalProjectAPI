@@ -28,6 +28,9 @@ admin.site.register(BasketballPlayerInBasketballGame)
 admin.site.register(BasketballImage)
 admin.site.register(BasketballVideo)
 
+admin.site.register(ActivateUser)
+admin.site.register(ForgottenUser)
+
 
 class NewsAdmain(admin.ModelAdmin):
     list_display = ('publish_date', 'title', 'type')
