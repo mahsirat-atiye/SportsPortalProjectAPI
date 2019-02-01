@@ -129,3 +129,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'irobotisreal@gmail.com'
 EMAIL_HOST_PASSWORD = 'asdf1234%'
 EMAIL_PORT = 587
+
+REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = '/logout/'

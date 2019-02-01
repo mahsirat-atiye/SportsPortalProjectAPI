@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %} فراموشی رمز عبور {% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="center-block rounded"
+             style="width:50vw;display:table;padding: 10px;margin: 10vh auto;background-color:#edffe1;">
+            <h2>تغییر رمز</h2>
+            <form method="post">
+                {% csrf_token %}
+                <label>
+                    <input placeholder="رمز عبور جدید" name="password" id="password" type="password">
+                </label>
+                <label>
+                    <input placeholder="تکرار رمز عبور جدید" name="password_r" id="password_r" type="password">
+                </label>
+                <button class="btn btn-success" type="submit">تغییر رمز</button>
+            </form>
+            <br>
+        </div>
+    </div>
+{% endblock %}

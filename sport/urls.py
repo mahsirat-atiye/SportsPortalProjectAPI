@@ -1,5 +1,7 @@
 from django.conf.urls.static import static
+from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 from django.urls import path, include
 
 from react_django import settings
@@ -16,7 +18,9 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),  # new
     path('signup/', signup, name='signup'),
     path('login/', login, name='login'),
-    path('<str:hashcode>/validate/', validate, name='login'),
+    path('reset/', reset_request, name='password_reset'),
+    path('<str:hashcode>/reset/', reset, name='password_reset_confirm'),
+    path('<str:hashcode>/activate/', activate, name='activate'),
 
     # football
 

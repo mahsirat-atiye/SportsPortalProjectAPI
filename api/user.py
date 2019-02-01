@@ -10,8 +10,14 @@ def generate_hash():
 
 
 def request_forgotten(user):
-    rand = generate_hash()
-    ForgottenUser.objects.filter(user=User.objects.filter(username=user)).update_or_create(key=rand)
+    try:
+        rand = generate_hash()
+        requested_user = User.objects.filter(username=user)[0]
+        print(rand)
+        ForgottenUser.objects.update_or_create(user=requested_user, key=rand)
+    except Exception as e:
+        print(e)
+        return ''
 
     return rand
 
@@ -29,12 +35,18 @@ def request_activation(user):
     return rand
 
 
-def validate_user(hashcode):
+def activation_check(hashcode):
     try:
-        print(ActivateUser.objects.filter(key=hashcode)[0])
+        user = ActivateUser.objects.filter(key=hashcode)[0].user
+        User.objects.filter(username=user).update(is_active=True)
+        ActivateUser.objects.filter(key=hashcode)[0].delete()
     except IndexError:
-        try:
-            print(ForgottenUser.objects.filter(key=hashcode)[0])
-        except IndexError:
-            return
+        pass
 
+
+def forgotten_check(hashcode):
+    try:
+        user = ForgottenUser.objects.filter(key=hashcode)[0].user
+        return user
+    except IndexError:
+        return None
