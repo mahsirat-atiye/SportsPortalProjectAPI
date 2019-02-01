@@ -11,10 +11,10 @@ TYPE_CHOICES = (
 
 
 class News(models.Model):
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES, default='F')
-    title = models.CharField(max_length=100)
-    text = models.TextField()
-    publish_date = models.DateField()
+    type = models.CharField(max_length=1, choices=TYPE_CHOICES, default='F', verbose_name=_('نوع'))
+    title = models.CharField(max_length=100, verbose_name=_('عنوان'))
+    text = models.TextField(verbose_name=_('متن'))
+    publish_date = models.DateField(verbose_name=_('تاریخ انتشار'))
 
     def __str__(self):
         s = self.title
@@ -24,6 +24,8 @@ class News(models.Model):
         verbose_name = _('خبر')
         verbose_name_plural = _('اخبار')
         # verbose_name_plural = "Pieces of news"
+
+
 # tags and resources and related teams and related players were handled by many to many relationship
 
 #     todo : images of non News
@@ -32,8 +34,12 @@ class News(models.Model):
 
 
 class Resource(models.Model):
-    name = models.CharField(max_length=100)
-    news = models.ManyToManyField(News)
+    name = models.CharField(max_length=100, verbose_name=_('نام'))
+    news = models.ManyToManyField(News, verbose_name=_('خبر'))
+
+    def __str__(self):
+        s = self.name
+        return s
 
     class Meta:
         verbose_name = _('منبع')
@@ -44,8 +50,8 @@ class Resource(models.Model):
 
 
 class Tag(models.Model):
-    text = models.CharField(max_length=100)
-    news = models.ManyToManyField(News)
+    text = models.CharField(max_length=100, verbose_name=_('متن'))
+    news = models.ManyToManyField(News, verbose_name=_('خبر'))
 
     class Meta:
         verbose_name = _('تگ')
@@ -60,10 +66,10 @@ class Tag(models.Model):
 
 
 class Comment(models.Model):
-    title = models.CharField(max_length=100)
-    text = models.TextField()
-    writer = models.ForeignKey(User, on_delete=models.CASCADE)
-    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100, verbose_name=_('عنوان'))
+    text = models.TextField(verbose_name=_('متن'))
+    writer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('نویسنده'))
+    news = models.ForeignKey(News, on_delete=models.CASCADE, verbose_name=_('خبر'))
 
     class Meta:
         verbose_name = _('نظر')

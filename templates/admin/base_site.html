@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site here admin') }}{% endblock %}
+
+{#{% block branding %}#}
+{#<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administrationLOLO') }}</a></h1>#}
+{#{% endblock %}#}
+{#{% load static %}#}
+
+{#{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'override.css' %}" />{% endblock %}#}
+{% block branding %}
+    <h1 id="site-name" style="color: #ebccd1; font-size: 50px; font-family: 'B Nazanin';">{% trans 'صفحه مدیریت ورزش با ما به مدیریت جمشیدپور و نجیمی' %}</h1>
+{% endblock %}
+{% block nav-global %}{% endblock %}

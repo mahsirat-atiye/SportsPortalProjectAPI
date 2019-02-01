@@ -3,6 +3,7 @@ from django.db import models
 
 from sport.models.football_models import TEAM_SITUATION_IN_GAME
 from sport.models.abstract_models import Game, Human, Event, Player, Team, League, Image, Video
+from django.utils.translation import ugettext_lazy as _
 
 BASKETBALL_PLAYER_EVENT_CHOICES = (
     ('2PT', 'پرتاب دو امتیازی'),
@@ -31,18 +32,32 @@ BASKETBALL_NON_PLAYER_POST_CHOICES = (
 class BasketballTeam(Team):
     followers = models.ManyToManyField(User, blank=True, null=True)
 
+    class Meta:
+        verbose_name = _('تیم بسکتبال')
+        verbose_name_plural = _('تیم های بسکتبال')
+
 
 class BasketballLeague(League):
-    pass
+    class Meta:
+        verbose_name = _('لیگ بسکتبال')
+        verbose_name_plural = _('لیگ های بسکتبال')
 
 
 class BasketballGame(Game):
     league = models.ForeignKey(BasketballLeague, on_delete=models.CASCADE, blank=True, null=True)
 
+    class Meta:
+        verbose_name = _('بازی بسکتبال')
+        verbose_name_plural = _('بازی های بسکتبال')
+
 
 class BasketballPlayer(Player):
     team = models.ForeignKey(BasketballTeam, on_delete=models.CASCADE)
     post = models.CharField(max_length=2, choices=BASKETBALL_POST_CHOICES)
+
+    class Meta:
+        verbose_name = _('بسکتبالیست')
+        verbose_name_plural = _('بسکتبالیست ها')
 
 
 class BasketballEvent(Event):
@@ -55,10 +70,18 @@ class BasketballEvent(Event):
             self.game.date) + "انجام داد" + self.event_type
         return s
 
+    class Meta:
+        verbose_name = _('اتفاق بسکتبالی')
+        verbose_name_plural = _('اتفاقات بسکتبالی')
+
 
 class BasketballNonPlayer(Human):
     team = models.ForeignKey(BasketballTeam, on_delete=models.CASCADE)
     post = models.CharField(max_length=2, choices=BASKETBALL_NON_PLAYER_POST_CHOICES)
+
+    class Meta:
+        verbose_name = _('پشتیبان بسکتبالی')
+        verbose_name_plural = _('پشتیبان های بسکتبالی')
 
 
 class BasketballTeamInBasketballGame(models.Model):
@@ -74,6 +97,10 @@ class BasketballTeamInBasketballGame(models.Model):
     situation = models.CharField(max_length=3, choices=TEAM_SITUATION_IN_GAME, blank=True, null=True)
     best_player = models.ForeignKey(BasketballPlayer, on_delete=models.CASCADE, blank=True, null=True)
 
+    class Meta:
+        verbose_name = _('حضور یک تیم بسکتبال در بازی بسکتبال')
+        verbose_name_plural = _('حضورهای یک تیم بسکتبال در بازی بسکتبال')
+
     def __str__(self):
         s = self.team.name + " در بازی " + str(self.game.date)
         return s
@@ -85,6 +112,10 @@ class BasketballPlayerInBasketballGame(models.Model):
     main_player = models.BooleanField(blank=True, null=True)
     time_of_change = models.TimeField(blank=True, null=True)
 
+    class Meta:
+        verbose_name = _('حضور یک بسکتبالیست در بازی بسکتبال')
+        verbose_name_plural = _('حضورهای یک بسکتبالیست در بازی بسکتبال')
+
     def __str__(self):
         s = self.player.first_name + "  " + self.player.last_name
         " در بازی " + str(self.game.date)
@@ -95,6 +126,14 @@ class BasketballImage(Image):
     game = models.ForeignKey(BasketballGame, on_delete=models.CASCADE, blank=True, null=True)
     team = models.ForeignKey(BasketballTeam, on_delete=models.CASCADE, blank=True, null=True)
 
+    class Meta:
+        verbose_name = _('تصویر مرتبط با بسکتبال')
+        verbose_name_plural = _('تصاویر مرتبط با بسکتبال')
+
 
 class BasketballVideo(Video):
     game = models.ForeignKey(BasketballGame, on_delete=models.CASCADE, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('فیلم مرتبط با بسکتبال')
+        verbose_name_plural = _('فیلم های مرتبط با بسکتبال')
