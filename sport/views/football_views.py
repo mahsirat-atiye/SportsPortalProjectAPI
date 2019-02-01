@@ -135,8 +135,8 @@ def football_leagues(request):
     current_year = timezone.now().year
     current_year = int(current_year)
 
-    current_leagues = FootballLeague.objects.filter(year__gte=current_year)
-    archive_leagues = FootballLeague.objects.filter(year__lt=current_year).order_by('-year')
+    current_leagues = FootballLeague.objects.filter(year__gte=current_year-1922)
+    archive_leagues = FootballLeague.objects.filter(year__lt=current_year-1922).order_by('-year')
 
     if request.POST:
         current_leagues = filter_leagues_by_text(current_leagues, request.POST["part_of_league"])
