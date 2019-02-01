@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 import django.contrib.auth as dj_auth
 
@@ -39,6 +39,7 @@ def login(request):
     if request.user.is_authenticated:
         dj_auth.logout(request)
         return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
+        # return HttpResponse("cici")
     elif request.method == "POST":
         f = LoginForm(data=request.POST)
         if f.is_valid():
@@ -48,9 +49,11 @@ def login(request):
             if user is not None:
                 dj_auth.login(request, user)
                 return HttpResponseRedirect(settings.REDIRECT_URL)
+                # return HttpResponse("hihi")
     else:
         f = LoginForm()
     return render(request, 'registration/login.html', {'form': f})
+    # return HttpResponse("bibi")
 
 
 def reset_request(request):

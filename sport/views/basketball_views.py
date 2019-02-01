@@ -264,35 +264,38 @@ def filter_games_by_opponent_basketball(games, team, text):
 
 def separate_by_week_basketball(league):
     games = league.basketballgame_set.order_by('-date')
+    if not games:
+        return []
     last_game_date = games[0].date
     first_game_date = games.last().date
 
     # todo change it to persian # done ;))
     last_game_weekday = last_game_date.weekday()
-    last_game_weekday += 2
-    last_game_weekday %= 7
+    # last_game_weekday += 2
+    # last_game_weekday %= 7
 
     last_interval = last_game_date - datetime.timedelta(days=last_game_weekday)
     last_week_games = league.basketballgame_set.filter(
         date__gte=last_interval)
     first_game_weekday = first_game_date.weekday()
 
-    first_game_weekday += 2
-    first_game_weekday %= 7
+    # first_game_weekday += 2
+    # first_game_weekday %= 7
 
     first_interval = first_game_date + datetime.timedelta(days=7 - first_game_weekday)
     first_week_games = league.basketballgame_set.filter(
         date__lt=first_interval)
 
     games_by_weeks = [first_week_games]
-    date = first_interval
-    while date < last_interval:
-        games_of_week = league.basketballgame_set.filter(
-            date__lte=date + datetime.timedelta(days=7)).filter(date__gt=date)
-        games_by_weeks.append(games_of_week)
-        date = date + datetime.timedelta(days=7)
+    if last_game_date - last_game_date >= datetime.timedelta(days=7):
+        date = first_interval
+        while date < last_interval:
+            games_of_week = league.basketballgame_set.filter(
+                date__lte=date + datetime.timedelta(days=7)).filter(date__gt=date)
+            games_by_weeks.append(games_of_week)
+            date = date + datetime.timedelta(days=7)
 
-    games_by_weeks.append(last_week_games)
+        games_by_weeks.append(last_week_games)
     return games_by_weeks
 
 

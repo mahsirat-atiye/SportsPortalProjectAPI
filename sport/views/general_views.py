@@ -82,6 +82,7 @@ def recent_general_news_games(request):
     # news
     favorite_football_news = get_related_news_by_all_criteria(football_news, *favorites)
     favorite_basketball_news = get_related_news_by_all_criteria(basketball_news, *favorites)
+
     if request.POST:
         n = int(request.POST['number'])
         recent_football_news = News.objects.filter(type__exact='F').filter(publish_date__lte=timezone.now()).order_by(
@@ -96,7 +97,7 @@ def recent_general_news_games(request):
             '-publish_date')[:10]
 
     context = {
-        'recent_football_news ': recent_football_news,
+        'recent_football_news': recent_football_news,
         'recent_basketball_news': recent_basketball_news,
 
         'favorite_football_news': favorite_football_news,
